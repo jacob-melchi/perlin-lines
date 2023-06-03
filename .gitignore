@@ -2,3 +2,5 @@ outputs
 mat
 *.exe
 *.o
+vec
+.DS_Store
