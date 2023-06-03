@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "OSX BUILD + RUN",
+			"type": "shell",
+			"command": "gcc-12 vecField.c -o vec -O3 $(pkg-config --cflags --libs cairo); ./vec",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+		}
+	]
+}
