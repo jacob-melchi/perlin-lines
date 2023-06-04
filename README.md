@@ -2,6 +2,7 @@
 # drawing pretty lines over a perlin noise field. lots of tweakable parameters.
  
  drawing uses the cairo graphics library.
+ not the cleanest code in the world to read, but I'm still working on getting images out of it that I like. that comes first.
  
  the code will generate a perlin noise field, then drop 'particles' into it and save their paths one by one.
  the field's value at any given point determines in which direction the particle will be pushed/accelerated.
