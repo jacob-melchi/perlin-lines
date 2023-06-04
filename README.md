@@ -21,6 +21,7 @@
 # lines stemming from both the left and right sides of the image:
 ![example](https://github.com/jocab1/perlin-lines/assets/104691428/9cb6ad6d-891c-4efb-b970-96549d290bcf)
 
+
 # lines starting densely packed together:
 ![lines packed more densely](https://github.com/jocab1/perlin-lines/assets/104691428/faf4d3b9-5193-49b4-bddb-b71d4ea8684d)
 
@@ -28,6 +29,8 @@
 ![gravity scaled up](https://github.com/jocab1/perlin-lines/assets/104691428/b7053c86-036f-4b50-aea8-98fecf6218cc)
 
 # visualization of an example noise field:
-![vector field](https://github.com/jocab1/perlin-lines/assets/104691428/aae5e992-27f9-4fdd-8686-2b2dfc66ccc9)
+![vector field](https://github.com/jocab1/perlin-lines/assets/104691428/378ca1da-2a9c-4f9c-ab21-7192b8db281c)
+
+
 
 colors here range from blue to red, depending on the value of the noise at each point.
