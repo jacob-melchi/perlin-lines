@@ -19,18 +19,15 @@
  below are some examples. there are more in the 'cool ones' folder. :)
 
 # lines stemming from both the left and right sides of the image:
-![example](https://github.com/jocab1/perlin-lines/assets/104691428/9cb6ad6d-891c-4efb-b970-96549d290bcf)
-
+![example](https://github.com/jocab1/perlin-lines/assets/104691428/bd695638-d0b9-4e9d-b333-b9436b29fba6)
 
 # lines starting densely packed together:
-![lines packed more densely](https://github.com/jocab1/perlin-lines/assets/104691428/faf4d3b9-5193-49b4-bddb-b71d4ea8684d)
+![lines packed more densely](https://github.com/jocab1/perlin-lines/assets/104691428/2a73f6ed-b445-4d18-ad3e-076ec3de7b73)
 
 # 'gravity' from old lines cranked up a bit more:
-![gravity scaled up](https://github.com/jocab1/perlin-lines/assets/104691428/b7053c86-036f-4b50-aea8-98fecf6218cc)
+![gravity scaled up](https://github.com/jocab1/perlin-lines/assets/104691428/101a1d6c-ff99-464f-844c-481cfa6c862c)
 
 # visualization of an example noise field:
 ![vector field](https://github.com/jocab1/perlin-lines/assets/104691428/378ca1da-2a9c-4f9c-ab21-7192b8db281c)
-
-
 
 colors here range from blue to red, depending on the value of the noise at each point.
