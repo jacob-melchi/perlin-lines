@@ -15,3 +15,9 @@
 		}
 	]
 }
+
+// !
+// cd projects/vecField
+// gcc-12 vecField.c -o vec -O3 $(pkg-config --cflags --libs cairo); ./vec
+// gcc for windows
+// gdb: "layout src" for source code and not assembly

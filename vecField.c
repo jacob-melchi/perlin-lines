@@ -4,12 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-// !
-// cd projects/vecField
-// gcc-12 vecField.c -o vec -O3 $(pkg-config --cflags --libs cairo); ./vec
-// gcc for windows
-// gdb: "layout src" for source code and not assembly
-
 // not a lot of rightward movement because perlin noise doesn't reach its exremes very often.
 // interpreting these extremes as angles, they would be 0 and 2pi.
 // BOTH of these extreme angles are ones that point right.
@@ -294,10 +288,10 @@ int main(int argc, char* argv[]) {
     cairo_rectangle(cr, -SPACE/2, -SPACE/2, SPACE, SPACE);
     cairo_fill(cr);
 
-#if !STATICFIELD
+    #if !STATICFIELD
     for(int i = 0; i < WID * RESOLUTION + 1; i++) { // generate random field of vectors given resolution
         for(int j = 0; j < HEI * RESOLUTION + 1; j++) {
-#if CARDINALS
+            #if CARDINALS
             double seed = rand() % 8;
                         for(int a = 0; a < 8; a++) {
                             if(seed == a) {
@@ -305,15 +299,16 @@ int main(int argc, char* argv[]) {
                                 // printf("%d\n", a);
                             }
                         }
-#else
+
+            #else
             randomField[i][j].x = (double)(rand()/(RAND_MAX/2.0) - 1.0); 
             randomField[i][j].y = (double)(rand()/(RAND_MAX/2.0) - 1.0);
             randomField[i][j] = normalize(randomField[i][j]); // want unit vectors
-#endif
+            #endif
             // *!* TODO: *!* maybe randomize the magnitudes a little bit? add noise?
         }
     }
-#endif
+    #endif
 
     // set up cairo pen
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
@@ -326,8 +321,7 @@ int main(int argc, char* argv[]) {
     int bonks = 0; // collision detection counter
 
     // print perlin field
-#if DRAWTICKS
-    
+    #if DRAWTICKS
     for(int i = 0; i < NUMTICKS; i++) {
         for(int j = 0; j < NUMTICKS; j++) {
                 // increment in defined space for x/y
@@ -339,12 +333,13 @@ int main(int argc, char* argv[]) {
                 double noise = getPerlin(point, NORM);
                 if(SCALERANGE) noise /= range;
 
-#if GREYSCALE
+                #if GREYSCALE
                 cairo_set_source_rgba(cr, noise, noise, noise, 1);
                 cairo_move_to(cr, point.x, point.y);
                 cairo_rectangle(cr, point.x, point.y, tick, tick);
                 cairo_fill(cr);
-#else
+
+                #else
                 double ang = ((noise + 1) * M_PI) - (ANGSHIFT);
                 
                 // if(ang > 2 * M_PI) ang = (2 * M_PI) - .01;
@@ -368,7 +363,7 @@ int main(int argc, char* argv[]) {
                 cairo_move_to(cr, point.x, point.y);
                 cairo_rel_line_to(cr, perlinVec.x/(TICKMULT*2), perlinVec.y/(TICKMULT*2));
                 cairo_stroke(cr);
-#endif
+                #endif
         }
     }
 
@@ -404,24 +399,26 @@ int main(int argc, char* argv[]) {
     printf("\n");
 
     // init paths with first step
-#if DIRECTIONS
+    #if DIRECTIONS
     for(int i = 0; i < NUMLINES; i++) {
         paths[i][0].x = ((i % 2) == 0) ? 25 : -25;
         paths[i][0].y = (-1.0 * (LINESPACE/2.0)) + i * (LINESPACE / (NUMLINES - 1.0));
     }
-#else
+
+    #else
     for(int i = 0; i < NUMLINES; i++) {
         paths[i][0].x = 25;
         paths[i][0].y = (-1.0 * (LINESPACE/2.0)) + i * (LINESPACE / (NUMLINES - 1.0));
     }
-#endif
+    #endif
     
     // will want to draw AFTER.
     // can just loop through each path and draw once lines are defined.
-#if PARALLEL
+    #if PARALLEL
     for(int n = 1; n < NUMSTEPS + 1; n++) {
         for(int i = 0; i < NUMLINES; i++) {
-#else // SERIES
+
+    #else // SERIES
     for(int i = 0; i < NUMLINES; i++) {
 
         if(i % 2 == 0) { direction = 1;  } // alternate odd and even
@@ -430,7 +427,7 @@ int main(int argc, char* argv[]) {
         printf("line %02d of %02d: ", (i+1), NUMLINES);
         start = clock();
         for(int n = 1; n < NUMSTEPS + 1; n++) {  
-#endif
+    #endif
             // 1. TENTATIVELY add noise to all paths
             point = paths[i][n-1]; // start at previous point
             double noise = getPerlin(point, NORM); // get noise
@@ -448,15 +445,17 @@ int main(int argc, char* argv[]) {
             perlinTest[i].y = sin(ang);
 
             // store new paths in temp array (is this necessary?)
-#if DIRECTIONS
+            #if DIRECTIONS
             if(direction == -1) { paths[i][n].x = point.x + (perlinTest[i].x * stepSize * -1); }
             else                { paths[i][n].x = point.x + (perlinTest[i].x * stepSize);      }
-#else
+
+            #else
             paths[i][n].x = point.x + (perlinTest[i].x * stepSize);
-#endif
+            #endif
+
             paths[i][n].y = point.y + (perlinTest[i].y * stepSize);
 
-#if DOGRAVITY
+            #if DOGRAVITY
             // make lines repel each other. each point on each line emits a "field" that
             // pushes other lines away (if they get within a certain radius)
             int candidateTracker = 0;
@@ -493,15 +492,18 @@ int main(int argc, char* argv[]) {
                 if(candidateTracker != 0) { // make sure there's a point in range!
                     // get vector pointing from line to head
                     repel = (vector){0, 0}; // zero out repel vector
-#if GRAVSUM
+
+                    #if GRAVSUM
                     for(int j = 0; j < candidateTracker; j++) { // sum gravity of ALL points in range
                         repel.x += (paths[i][n].x - gravityCandidates[j].x);
                         repel.y += (paths[i][n].y - gravityCandidates[j].y);
                     }
-#else
+
+                    #else
                     repel.x = paths[i][n].x - closestPoint.x;
                     repel.y = paths[i][n].y - closestPoint.y;
-#endif
+                    #endif
+
                     // 1) normalize
                     repel = normalize(repel);
 
@@ -511,9 +513,11 @@ int main(int argc, char* argv[]) {
                     double alpha;
                     if((r - d) <= 0) { alpha = 0; }
                     else { alpha = (GRAVSTREN * ((r * r) - (2 * r * d) + (d * d))) / (r * r); }
-#if GRAVSUMSCL
+
+                    #if GRAVSUMSCL
                     alpha *= candidateTracker; // scale gravity by number of points?
-#endif
+                    #endif
+
                     repel.x *= alpha;
                     repel.y *= alpha;
 
@@ -524,7 +528,8 @@ int main(int argc, char* argv[]) {
                     repelOverTime.y += repel.y;
                 }
             } // end loop over other lines (for comparison)
-#endif    
+            #endif    
+
             // it seems that there needs to be some sort of acceleration/hysteresis on the gravity,
             // otherwise a line will go immediately back to the one it just fled from, and jagged edges appear.
             // so -- always do this:
@@ -536,7 +541,7 @@ int main(int argc, char* argv[]) {
         } // end loop over n steps
 
 
-#if DOBOUNCES
+        #if DOBOUNCES
         for(int currentLine = 0; currentLine < NUMLINES; currentLine++) {
             // TODO: lines bounce ~through~ each other sometimes.
             // // add some sort of check for resultant directions?? something else?
@@ -608,7 +613,7 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-#endif
+        #endif
 
         end = clock(); // store time in clock cycles
         cpuTimeUsed = cpuTimeUsed = ((double) (end - start)) / CLOCKS_PER_SEC; // convert to seconds 
@@ -629,14 +634,15 @@ int main(int argc, char* argv[]) {
         cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // go to beginning of path
 
         for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in current line...
-#if NOJUMPS
+            #if NOJUMPS
             // TODO: are we getting NaNs again????
             if(dist(paths[i][n], paths[i][n-1]) > 5) { // if there's some massive jump...
                 // need to move, otherwise there will still be a weird long-ass line
                 cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
                 continue; // next point
             }
-#endif
+            #endif
+
             cairo_line_to(cr, paths[i][n].x, paths[i][n].y); // get the current segment and draw it
             cairo_stroke(cr);
 
@@ -683,7 +689,7 @@ int main(int argc, char* argv[]) {
     cairo_destroy(cr); // clean up and save
     cairo_surface_write_to_png(surface, "out.png");
 
-#if FILENAME
+    #if FILENAME
     // resolution, directions, grav radius,
     char[30] resString, dirString, radString numString;
 
@@ -701,7 +707,7 @@ int main(int argc, char* argv[]) {
     const char[] C = strcat(B, radString);
     
     cairo_surface_write_to_png(surface, C);
-#endif
+    #endif
      
 
     cairo_surface_destroy(surface);
