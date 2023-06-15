@@ -85,7 +85,7 @@ vector repelOverTime;
 clock_t start, end;
 double cpuTimeUsed, totalTimeUsed;
 
-// cardinal directions to choose from if so desired
+// static cardinal directions to choose from if so desired
 vector choices[8] = {
     (vector){1, 0},
     (vector){M_SQRT2/2.0, M_SQRT2/2.0},
@@ -99,9 +99,11 @@ vector choices[8] = {
 
 
 #if STATICFIELD
+// not used right now. was storing a massive non-random field before.
 vector randomField[(int)(WID*RESOLUTION)][(int)(HEI*RESOLUTION)] = {};
+
 #else
-    vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
+vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
 #endif
 
 double magnitude(vector vec){
@@ -109,7 +111,7 @@ double magnitude(vector vec){
     return sqrt((vec.x * vec.x) + (vec.y * vec.y));
 }
 
-// return normalized input vector
+// normalizes the input vector and returns it
 vector normalize(vector vec) { 
     vector out; // output vector
     double mag = magnitude(vec); // magnitude of input vector
@@ -121,22 +123,23 @@ vector normalize(vector vec) {
     return out;
 }
 
+// returns the dot product of the two inputs
 double dot(vector v1, vector v2) {
     return (v1.x * v2.x) + (v1.y * v2.y);
 }
 
-// get angle between two vectors
+// returns the angle between two vectors
 double getAngle(vector v1, vector v2) {
     // returns an angle in [0, pi]
     return acos((dot(v1, v2)) / (magnitude(v1) * magnitude(v2)));
 }
 
-// distance between two points
+// returns the distance between two points
 double dist(vector v1, vector v2) {
     return magnitude((vector){v1.x - v2.x, v1.y - v2.y});
 }
 
-// reflect one vector off another
+// 'reflects' one vector off another
 // v1 hits v2
 vector reflect(vector v1, vector v2) {
     /*
@@ -163,18 +166,22 @@ vector reflect(vector v1, vector v2) {
     return (vector){cos(angleOut), sin(angleOut)};
 }
 
+// returns a point between a and b
+// factor w, in [0,1], will determine where the returned point will be
+// on a straight line between a and b. w == 1 just returns a, w == 0 returns b.
 double lerp(double a, double b, double w) {
     // linear interpolation
     return (w * a) + ((1.0 - w) * b);
 }
 
+// returns a 'faded' value as specified by other implementations of perlin noise
 double fade(double x) {
     return ((6 * pow(x,5)) - (15 * pow(x,4)) + (10 * pow(x,3)));
     //return x;
 }
 
-// generate the perlin noise vector of a point, given coordinates + other parameters
-// no actual cairo interfacing in here
+// generates the perlin noise vector of a point, given coordinates + other parameters
+// no cairo interfacing in here
 double getPerlin(vector point, int norm) {
     // find which grid space point is in
     // add one for other corners
@@ -389,7 +396,7 @@ int main(int argc, char* argv[]) {
             cairo_stroke(cr);
         }
     }
-#endif
+    #endif
     
     
     
