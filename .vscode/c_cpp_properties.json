@@ -11,6 +11,19 @@
                 "UNICODE",
                 "_UNICODE"
             ]
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${default}"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/cygwin64/bin/gcc"
         }
     ],
     "version": 4

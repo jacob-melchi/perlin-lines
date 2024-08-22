@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+// TODO: want to either:
+// //    1. keep a separate field with gravity updated by lines
+// //    2. update/hardcode the original field with the lines' gravity
 // not a lot of rightward movement because perlin noise doesn't reach its exremes very often.
 // interpreting these extremes as angles, they would be 0 and 2pi.
 // BOTH of these extreme angles are ones that point right.
