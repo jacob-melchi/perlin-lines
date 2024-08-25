@@ -4,3 +4,5 @@ mat
 *.o
 vec
 .DS_Store
+*.d
+*.a
