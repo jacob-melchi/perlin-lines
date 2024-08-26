@@ -127,14 +127,14 @@ vector normalize(vector vec) {
 }
 
 // returns the dot product of the two inputs
-double dot(vector v1, vector v2) {
+double dotProduct(vector v1, vector v2) {
     return (v1.x * v2.x) + (v1.y * v2.y);
 }
 
 // returns the angle between two vectors
 double getAngle(vector v1, vector v2) {
     // returns an angle in [0, pi]
-    return acos((dot(v1, v2)) / (magnitude(v1) * magnitude(v2)));
+    return acos((dotProduct(v1, v2)) / (magnitude(v1) * magnitude(v2)));
 }
 
 // returns the distance between two points
@@ -250,10 +250,10 @@ double getPerlin(vector point, int norm) {
     // get dot products
     double d1, d2, d3, d4;
     double scl = 1;
-    d1 = dot(u1, v1) * scl;
-    d2 = dot(u2, v2) * scl;
-    d3 = dot(u3, v3) * scl;
-    d4 = dot(u4, v4) * scl;
+    d1 = dotProduct(u1, v1) * scl;
+    d2 = dotProduct(u2, v2) * scl;
+    d3 = dotProduct(u3, v3) * scl;
+    d4 = dotProduct(u4, v4) * scl;
 
     // linear interpolation of dot products
     // double xWeight1 = (c2.x - point.x)/(c2.x - c1.x);

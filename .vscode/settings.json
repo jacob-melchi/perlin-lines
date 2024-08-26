@@ -1,5 +1,25 @@
 {
     "files.associations": {
-        "cairo.h": "c"
-    }
+        "cairo.h": "c",
+        "cmath": "cpp"
+    },
+    "runOnSave.statusMessageTimeout": 3000,
+    "runOnSave.commands": [
+        {
+            "match": ".*\\.c$",
+            "command": "make -f \"${workspaceFolder}/MakefileCppUTest.mk\"",
+            "runIn": "terminal"
+        },
+        {
+            "match": ".*\\.h$",
+            "command": "make -f \"${workspaceFolder}/MakefileCppUTest.mk\"",
+            "runIn": "terminal"
+        },
+        {
+            "match": ".*\\.cpp$",
+            "command": "make -f \"${workspaceFolder}/MakefileCppUTest.mk\"",
+            "runIn": "terminal"
+        },
+    ],
+    "makefile.configureOnOpen": false
 }
