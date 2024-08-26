@@ -32,6 +32,9 @@ TEST_GROUP(Vector) {
     }
 };
 
-IGNORE_TEST(Vector, StartHere) {
-    FAIL("start here!");
-}
+TEST(Vector, VectorTypeExists) {
+    vector test_vector = {1, 1};
+
+    LONGS_EQUAL(test_vector.x, 1);
+    LONGS_EQUAL(test_vector.y, 1);
+};
