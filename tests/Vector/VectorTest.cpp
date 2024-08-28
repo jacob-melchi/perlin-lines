@@ -24,7 +24,7 @@ extern "C"
 #include "vector.h"
 }
 
-#define DOUBLE_TOLERANCE .0001
+#define DOUBLE_TOLERANCE .00001
 
 TEST_GROUP(Vector) {
     vector v1, v2;
@@ -94,3 +94,24 @@ TEST(Vector, NormalizeDoesNotDivByZero) {
     DOUBLES_EQUAL(v2.x, 0, DOUBLE_TOLERANCE);
     DOUBLES_EQUAL(v2.y, 0, DOUBLE_TOLERANCE);
 };
+
+TEST(Vector, GetAngleExists) {
+    v1 = {1, 0};
+    v2 = {0, 1};
+
+    DOUBLES_EQUAL(getAngle(v1, v2), (M_PI/2.0), DOUBLE_TOLERANCE);
+}
+
+TEST(Vector, GetAngleMaxValue) {
+    v1 = {1,  0};
+    v2 = {-1, 0};
+
+    DOUBLES_EQUAL(getAngle(v1, v2), M_PI, DOUBLE_TOLERANCE);
+}
+
+TEST(Vector, GetAngleMinValue) {
+    v1 = {1, 0};
+    v2 = {1, 0};
+
+    DOUBLES_EQUAL(getAngle(v1, v2), 0, DOUBLE_TOLERANCE);
+}

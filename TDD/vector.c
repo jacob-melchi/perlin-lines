@@ -27,3 +27,9 @@ vector normalize(vector vec) {
 double dotProduct(vector v1, vector v2) {
     return (v1.x * v2.x) + (v1.y * v2.y);
 }
+
+// gets the angle between two input vectors
+// [0, pi]
+double getAngle(vector v1, vector v2) {
+    return acos(dotProduct(v1, v2) / (magnitude(v1) * magnitude(v2)));
+}
