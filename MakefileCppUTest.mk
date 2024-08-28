@@ -1,5 +1,7 @@
 #Set this to @ to keep the makefile quiet
-SILENCE = @
+# SILENCE = @
+
+
 
 #---- Outputs ----#
 COMPONENT_NAME = vecField
@@ -14,7 +16,7 @@ PROJECT_HOME_DIR = .
 CPP_PLATFORM = Gcc
 
 SRC_DIRS = \
-	$(PROJECT_HOME_DIR)/TDD \
+	$(PROJECT_HOME_DIR)/TDD/src\
 
 TEST_SRC_DIRS = \
 	tests\
@@ -23,12 +25,16 @@ TEST_SRC_DIRS = \
 INCLUDE_DIRS =\
   .\
   $(CPPUTEST_HOME)/include\
-  $(PROJECT_HOME_DIR)/include/LedDriver\
-  $(PROJECT_HOME_DIR)/TDD\
+  $(PROJECT_HOME_DIR)/TDD/include\
 
 #CPPUTEST_WARNINGFLAGS += -pedantic-errors -Wconversion -Wshadow  -Wextra
-CPPUTEST_WARNINGFLAGS += -Wall -Werror -Wswitch-default -Wswitch-enum
-CPPUTEST_EXE_FLAGS += -c
+CPPUTEST_WARNINGFLAGS = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
+CPPUTEST_EXE_FLAGS    += -c
 
+CPPUTEST_CXXFLAGS += $$(pkg-config --cflags cairo)
+CPPUTEST_CFLAGS   += $$(pkg-config --cflags cairo)
+CPPUTEST_LDFLAGS  += $$(pkg-config --libs cairo)
+
+# LDFLAGS = $$(pkg-config --libs cairo) -g #$(CPPUTEST_LDFLAGS) $(CPPUTEST_ADDITIONAL_LDFLAGS)
 
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk

@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "cairo.h": "c",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "stdio.h": "c",
+        "complex": "cpp"
     },
     "runOnSave.statusMessageTimeout": 3000,
     "runOnSave.commands": [

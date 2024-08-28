@@ -100,18 +100,18 @@ TEST(Vector, GetAngleExists) {
     v2 = {0, 1};
 
     DOUBLES_EQUAL(getAngle(v1, v2), (M_PI/2.0), DOUBLE_TOLERANCE);
-}
+};
 
 TEST(Vector, GetAngleMaxValue) {
     v1 = {1,  0};
     v2 = {-1, 0};
 
     DOUBLES_EQUAL(getAngle(v1, v2), M_PI, DOUBLE_TOLERANCE);
-}
+};
 
 TEST(Vector, GetAngleMinValue) {
     v1 = {1, 0};
     v2 = {1, 0};
 
     DOUBLES_EQUAL(getAngle(v1, v2), 0, DOUBLE_TOLERANCE);
-}
+};
