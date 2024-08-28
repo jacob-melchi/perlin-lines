@@ -1,4 +1,5 @@
 #include "cairo.h"
+#include "vector.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -63,11 +64,6 @@
 
 const double stepSize = .01; // size of step for drawing
 
-typedef struct vector { // 2D vector type
-    double x;
-    double y;
-} vector;
-
 // store the path of each line.
 // going to try collision detection.
 // switch order of for loops? go step-by-step and not line-by-line?
@@ -108,39 +104,6 @@ vector randomField[(int)(WID*RESOLUTION)][(int)(HEI*RESOLUTION)] = {};
 #else
 vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
 #endif
-
-double magnitude(vector vec){
-    // sqrt(x^2 + y^2)
-    return sqrt((vec.x * vec.x) + (vec.y * vec.y));
-}
-
-// normalizes the input vector and returns it
-vector normalize(vector vec) { 
-    vector out; // output vector
-    double mag = magnitude(vec); // magnitude of input vector
-    if(mag == 0) return vec;
-
-    out.x = vec.x / mag; // normalize
-    out.y = vec.y / mag;
-
-    return out;
-}
-
-// returns the dot product of the two inputs
-double dotProduct(vector v1, vector v2) {
-    return (v1.x * v2.x) + (v1.y * v2.y);
-}
-
-// returns the angle between two vectors
-double getAngle(vector v1, vector v2) {
-    // returns an angle in [0, pi]
-    return acos((dotProduct(v1, v2)) / (magnitude(v1) * magnitude(v2)));
-}
-
-// returns the distance between two points
-double dist(vector v1, vector v2) {
-    return magnitude((vector){v1.x - v2.x, v1.y - v2.y});
-}
 
 // 'reflects' one vector off another
 // v1 hits v2

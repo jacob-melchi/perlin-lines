@@ -13,5 +13,6 @@ double dotProduct(vector v1, vector v2);
 double magnitude(vector vec);
 vector normalize(vector vec);
 double getAngle(vector v1, vector v2);
+double dist(vector v1, vector v2);
 
 #endif /* VECTOR_H */

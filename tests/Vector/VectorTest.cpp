@@ -115,3 +115,17 @@ TEST(Vector, GetAngleMinValue) {
 
     DOUBLES_EQUAL(getAngle(v1, v2), 0, DOUBLE_TOLERANCE);
 };
+
+TEST(Vector, DistanceExists) {
+    v1 = {1, 0};
+    v2 = {0, 1};
+
+    DOUBLES_EQUAL(dist(v1, v2), sqrt(2), DOUBLE_TOLERANCE);
+};
+
+TEST(Vector, DistanceCanBeZero) {
+    v1 = {1, 0};
+    v2 = {1, 0};
+
+    DOUBLES_EQUAL(dist(v1, v2), 0, DOUBLE_TOLERANCE);
+};

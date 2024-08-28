@@ -33,3 +33,8 @@ double dotProduct(vector v1, vector v2) {
 double getAngle(vector v1, vector v2) {
     return acos(dotProduct(v1, v2) / (magnitude(v1) * magnitude(v2)));
 }
+
+// returns the distance between two vectors (assuming they both start at [0,0])
+double dist(vector v1, vector v2) {
+    return magnitude((vector){v1.x - v2.x, v1.y - v2.y});
+}
