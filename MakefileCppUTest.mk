@@ -26,9 +26,10 @@ INCLUDE_DIRS =\
   $(PROJECT_HOME_DIR)/TDD/include\
 
 #CPPUTEST_WARNINGFLAGS += -pedantic-errors -Wconversion -Wshadow  -Wextra
-CPPUTEST_WARNINGFLAGS  = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
+CPPUTEST_WARNINGFLAGS = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
 CPPUTEST_EXE_FLAGS    += -c
 
+# REMOVE '-static' FROM MAKEFILEWORKER!!
 CPPUTEST_CXXFLAGS += $$(pkg-config --cflags cairo)
 CPPUTEST_CFLAGS   += $$(pkg-config --cflags cairo)
 CPPUTEST_LDFLAGS  += $$(pkg-config --libs cairo)
