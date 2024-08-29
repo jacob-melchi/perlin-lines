@@ -19,17 +19,17 @@
 #define ANGSHIFT    0        // shift angle by some constant? (subtract)
 
 /** noise visualization **/
-#define DRAWTICKS   0        // draw perlin noise field?
+#define DRAWTICKS   1        // draw perlin noise field?
 #define NUMTICKS    750      // how many ticks to draw for non-greyscale visualization
 #define TICKMULT    5.0      // scale factor for length of each tick (divide calculated perlin vector)
 #define GREYSCALE   0        // draw greyscale squares based on noise value?
 
 /** line definitions **/
 #define NUMSTEPS    10000    // number of steps to take per line
-#define NUMLINES    3        // number of lines to draw
+#define NUMLINES    2        // number of lines to draw
 #define LINESPACE   48       // range (units) along which to spread lines
 #define PARALLEL    0        // step-by-step? (otherwise, line-by-line)
-#define DIRECTIONS  1        // draw from both directions?
+#define DIRECTIONS  0        // draw from both directions?
 
 /** collisions **/
 #define DOBOUNCES   0        // do bouncing?
