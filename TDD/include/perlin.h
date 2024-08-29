@@ -9,7 +9,7 @@
 vector randomField[(int)(WID*RESOLUTION)][(int)(HEI*RESOLUTION)] = {};
 
 #else
-vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
+extern vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
 #endif
 
 

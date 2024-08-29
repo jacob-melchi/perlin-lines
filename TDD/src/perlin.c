@@ -1,5 +1,7 @@
 #include "perlin.h"
 
+vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
+
 // returns a point between a and b
 // factor w, in [0,1], will determine where the returned point will be
 // on a straight line between a and b. w == 1 just returns a, w == 0 returns b.

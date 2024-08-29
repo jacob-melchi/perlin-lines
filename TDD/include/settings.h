@@ -26,7 +26,7 @@
 
 /** line definitions **/
 #define NUMSTEPS    10000    // number of steps to take per line
-#define NUMLINES    48       // number of lines to draw
+#define NUMLINES    3        // number of lines to draw
 #define LINESPACE   48       // range (units) along which to spread lines
 #define PARALLEL    0        // step-by-step? (otherwise, line-by-line)
 #define DIRECTIONS  1        // draw from both directions?
@@ -40,7 +40,7 @@
 #define NOJUMPS     1        // skip drawing big jumps in paths?
 
 /** gravity **/
-#define DOGRAVITY   1        // make lines repel each other? (yes yes, gravity isn't actually repulsive.)
+#define DOGRAVITY   0        // make lines repel each other? (yes yes, gravity isn't actually repulsive.)
 #define MEMORY      NUMLINES // nuber of lines "backwards" to look for gravity comparisons
 #define GRAVRADIUS  0.4      // radius in units of circle used for checking whether a line should be repelled
 #define GRAVSTREN   45.0     // big G; some constant to multiply into gravity equation
@@ -50,8 +50,6 @@
 
 /** misc **/
 #define FILENAME    0        // generate a second file w/ dynamic filename?
-
-const double stepSize = .01; // size of step for drawing
 
 
 #endif /* SETTINGS_H */

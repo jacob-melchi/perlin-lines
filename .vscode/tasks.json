@@ -16,7 +16,8 @@
 		{
 			"label": "win build+run",
 			"type": "shell",
-			"command": "gcc vecField.c -o vec -O3 $(pkg-config --cflags --libs cairo) --verbose; ./vec",
+			// "command": "gcc vecField.c -o vec -O3 $(pkg-config --cflags --libs cairo) --verbose; ./vec",
+			"command": "make; ./build/vecField",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},

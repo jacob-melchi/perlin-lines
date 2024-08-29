@@ -22,7 +22,6 @@
 // // could there be some sort of.. stretching of the output range? log or otherwise?
 
 
-
 // store the path of each line.
 // going to try collision detection.
 // switch order of for loops? go step-by-step and not line-by-line?
@@ -32,6 +31,7 @@ int isBouncing[NUMLINES] = {0}; // state of line - has it reflected recently?
 int bounceTracker[NUMLINES][NUMSTEPS + 1] = {0};
 vector perlinTest[NUMLINES];
 int direction = 1;
+const double stepSize = .01; // size of step for drawing
 
 // gravity-related variables
 vector gravityCandidates[NUMSTEPS];

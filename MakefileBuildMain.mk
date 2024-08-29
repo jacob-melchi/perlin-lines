@@ -1,5 +1,6 @@
 # Thanks to Job Vranish (https://spin.atomicobject.com/2016/08/26/makefile-c-projects/)
 TARGET_EXEC := vecField
+CXX = gcc
 
 BUILD_DIR := ./build
 SRC_DIRS  := ./TDD/src
