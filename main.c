@@ -265,13 +265,10 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < WID * RESOLUTION + 1; i++) { // generate random field of vectors given resolution
         for(int j = 0; j < HEI * RESOLUTION + 1; j++) {
             #if CARDINALS
-            double seed = rand() % 8;
-                        for(int a = 0; a < 8; a++) {
-                            if(seed == a) {
-                                randomField[i][j] = choices[a];
-                                // printf("%d\n", a);
-                            }
-                        }
+            int seed = rand() % 8;
+
+            randomField[i][j] = choices[seed];
+            // printf("%d\n", a);
 
             #else
             randomField[i][j].x = (double)(rand()/(RAND_MAX/2.0) - 1.0); 
