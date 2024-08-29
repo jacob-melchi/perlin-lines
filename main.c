@@ -92,10 +92,6 @@ int main(int argc, char* argv[]) {
 
             randomField[i][j] = choices[seed];
             // printf("%d\n", a);
-            int seed = rand() % 8;
-
-            randomField[i][j] = choices[seed];
-            // printf("%d\n", a);
 
             #else
             randomField[i][j].x = (double)(rand()/(RAND_MAX/2.0) - 1.0); 
