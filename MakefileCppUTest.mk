@@ -1,7 +1,5 @@
 #Set this to @ to keep the makefile quiet
-# SILENCE = @
-
-
+SILENCE = @
 
 #---- Outputs ----#
 COMPONENT_NAME = vecField
@@ -28,13 +26,11 @@ INCLUDE_DIRS =\
   $(PROJECT_HOME_DIR)/TDD/include\
 
 #CPPUTEST_WARNINGFLAGS += -pedantic-errors -Wconversion -Wshadow  -Wextra
-CPPUTEST_WARNINGFLAGS = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
+CPPUTEST_WARNINGFLAGS  = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
 CPPUTEST_EXE_FLAGS    += -c
 
 CPPUTEST_CXXFLAGS += $$(pkg-config --cflags cairo)
 CPPUTEST_CFLAGS   += $$(pkg-config --cflags cairo)
 CPPUTEST_LDFLAGS  += $$(pkg-config --libs cairo)
-
-# LDFLAGS = $$(pkg-config --libs cairo) -g #$(CPPUTEST_LDFLAGS) $(CPPUTEST_ADDITIONAL_LDFLAGS)
 
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk

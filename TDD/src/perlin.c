@@ -3,15 +3,14 @@
 // returns a point between a and b
 // factor w, in [0,1], will determine where the returned point will be
 // on a straight line between a and b. w == 1 just returns a, w == 0 returns b.
-double lerp(double a, double b, double w) {
+static double lerp(double a, double b, double w) {
     // linear interpolation
     return (w * a) + ((1.0 - w) * b);
 }
 
 // returns a 'faded' value as specified by other implementations of perlin noise
-double fade(double x) {
+static double fade(double x) {
     return ((6 * pow(x,5)) - (15 * pow(x,4)) + (10 * pow(x,3)));
-    //return x;
 }
 
 // generates the perlin noise vector of a point, given coordinates + other parameters
