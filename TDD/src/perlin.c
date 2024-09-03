@@ -31,9 +31,9 @@ double getPerlin(vector point, int norm) {
 
     // check against array limits
     if(randIdx_x > NUMVECS_X - 1) { randIdx_x = NUMVECS_X - 1; }
-    if(randIdx_x < 0) { randIdx_x = 0; }
+    if(randIdx_x < 0)             { randIdx_x = 0; }
     if(randIdx_y > NUMVECS_Y - 1) { randIdx_y = NUMVECS_Y - 1; }
-    if(randIdx_y < 0) { randIdx_y = 0; }
+    if(randIdx_y < 0)             { randIdx_y = 0; }
 
     // retrieve vectors from field
     vector v1 = randomField[randIdx_x    ][randIdx_y + 1]; // vectors at the four corners (not the corners' coordinates!)

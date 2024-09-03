@@ -56,7 +56,7 @@ vector choices[8] = {
 };
 
 
-int main(int argc, char* argv[]) {
+int manin(int argc, char* argv[]) {
     if(MEMORY > NUMLINES && DOGRAVITY) {
         printf("\n!!!!!!! number of lines to check against greater than number of actual lines. exiting. !!!!!!!\n");
         return 1;
@@ -84,7 +84,6 @@ int main(int argc, char* argv[]) {
     cairo_rectangle(cr, -SPACE/2, -SPACE/2, SPACE, SPACE);
     cairo_fill(cr);
 
-    #if !STATICFIELD
     for(int i = 0; i < WID * RESOLUTION + 1; i++) { // generate random field of vectors given resolution
         for(int j = 0; j < HEI * RESOLUTION + 1; j++) {
             #if CARDINALS
@@ -101,7 +100,6 @@ int main(int argc, char* argv[]) {
             // *!* TODO: *!* maybe randomize the magnitudes a little bit? add noise?
         }
     }
-    #endif
 
     // set up cairo pen
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
@@ -113,6 +111,7 @@ int main(int argc, char* argv[]) {
     vector perlinVec;
     int bonks = 0; // collision detection counter
 
+    // populate 'subtick' array
     // print perlin field
     #if DRAWTICKS
     for(int i = 0; i < NUMTICKS; i++) {

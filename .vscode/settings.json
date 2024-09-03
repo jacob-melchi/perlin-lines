@@ -3,7 +3,8 @@
         "cairo.h": "c",
         "cmath": "cpp",
         "stdio.h": "c",
-        "complex": "cpp"
+        "complex": "cpp",
+        "bitset": "cpp"
     },
     "runOnSave.statusMessageTimeout": 3000,
     "runOnSave.commands": [

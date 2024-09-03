@@ -17,7 +17,6 @@
 #define SPACE       50.0     // width of total transformed space
 
 /** noise generation **/
-#define STATICFIELD 0        // use the stored field?
 #define NORM        0        // normalize offset vectors?
 #define CARDINALS   1        // use only cardinal directions for random vectors?
 #define SCALERANGE  1        // divide noise by sqrt(2)/2?
