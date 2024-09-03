@@ -133,7 +133,7 @@ int dummy_main(int argc, char* argv[]) {
                 cairo_rectangle(cr, point.x, point.y, tick, tick);
                 cairo_fill(cr);
 
-                #else
+                #endif
                 double ang = ((noise + 1) * M_PI) - (ANGSHIFT);
                 
                 // if(ang > 2 * M_PI) ang = (2 * M_PI) - .01;
@@ -185,7 +185,6 @@ int dummy_main(int argc, char* argv[]) {
             cairo_stroke(cr);
         }
     }
-    #endif
     
     
     
