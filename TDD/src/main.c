@@ -55,6 +55,51 @@ vector choices[8] = {
     (vector){M_SQRT2/2.0, -M_SQRT2/2.0}
 };
 
+
+static void drawSubTicks(cairo_t* cr) {
+    // increment in defined space for x/y
+    double tick = SPACE/(1.0 * NUMTICKS);
+    vector point;
+    vector perlinVec; 
+
+    for(int i = 0; i < NUMTICKS; i++) {
+        for(int j = 0; j < NUMTICKS; j++) {
+                point.x = i/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0; // get even-spaced x and y coordinates
+                point.y = j/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0;
+
+                #if GREYSCALE
+                cairo_set_source_rgba(cr, noise, noise, noise, 1);
+                cairo_move_to(cr, point.x, point.y);
+                cairo_rectangle(cr, point.x, point.y, tick, tick);
+                cairo_fill(cr);
+
+                #endif
+                
+                getSubtick(i, j, &perlinVec);
+                double angle = acos(perlinVec.x);
+                if (perlinVec.y < 0) {
+                    angle = (2.0 * M_PI) - acos(perlinVec.x);
+                }
+
+                // print perlin field?
+                cairo_set_source_rgba(cr, 0, 1, 0, 1);
+                cairo_move_to(cr, point.x, point.y);
+                cairo_rel_line_to(cr, .01, .01);
+                cairo_stroke(cr);
+
+                double hue = perlinVec.x;
+                hue = (hue < 0) ? 0 : hue;
+                cairo_set_source_rgba(cr, ((angle + ANGSHIFT)/(2.0 * M_PI)),
+                                      0,
+                                      (((2.0 * M_PI) - angle + ANGSHIFT)/(2.0 * M_PI)),
+                                      1);
+                cairo_move_to(cr, point.x, point.y);
+                cairo_rel_line_to(cr, perlinVec.x/(TICKMULT*2), perlinVec.y/(TICKMULT*2));
+                cairo_stroke(cr);
+        }
+    }
+}
+
 #ifndef UNITTEST
 int main(int argc, char* argv[]) {
 #else
@@ -127,49 +172,29 @@ int dummy_main(int argc, char* argv[]) {
                 double noise = getPerlin(point, NORM);
                 if(SCALERANGE) noise /= range;
 
-                #if GREYSCALE
-                cairo_set_source_rgba(cr, noise, noise, noise, 1);
-                cairo_move_to(cr, point.x, point.y);
-                cairo_rectangle(cr, point.x, point.y, tick, tick);
-                cairo_fill(cr);
-
-                #endif
                 double ang = ((noise + 1) * M_PI) - (ANGSHIFT);
                 
                 // if(ang > 2 * M_PI) ang = (2 * M_PI) - .01;
                 // if(ang < 0) ang = 0.0;
 
-                vector perlinVec;
                 perlinVec.x = cos(ang);
                 perlinVec.y = sin(ang);
-                
-                // print perlin field?
-                #if DRAWTICKS
-                cairo_set_source_rgba(cr, 0, 1, 0, 1);
-                cairo_move_to(cr, point.x, point.y);
-                cairo_rel_line_to(cr, .01, .01);
-                cairo_stroke(cr);
 
-                double hue = cos(ang);
-                hue = (hue < 0) ? 0 : hue;
-                cairo_set_source_rgba(cr, ((ang + ANGSHIFT)/(2.0 * M_PI)),
-                                      0,
-                                      (((2.0 * M_PI) - ang + ANGSHIFT)/(2.0 * M_PI)),
-                                      1);
-                cairo_move_to(cr, point.x, point.y);
-                cairo_rel_line_to(cr, perlinVec.x/(TICKMULT*2), perlinVec.y/(TICKMULT*2));
-                cairo_stroke(cr);
-                #endif
+                setSubtick(i, j, &perlinVec);
         }
     }
 
+    #if DRAWTICKS
+    drawSubTicks(cr);
+    #endif
+
     // large grid
-    for(int i = 0; i < WID * RESOLUTION; i++) { // draw random vector field
-        for(int j = 0; j < HEI * RESOLUTION; j++) {
+    for(int i = 0; i < NUMVECS_X; i++) { // draw random vector field
+        for(int j = 0; j < NUMVECS_Y; j++) {
             // draw lines
             cairo_move_to(cr,
-                        i/(WID * (RESOLUTION/SPACE)) - SPACE/2,
-                        j/(HEI * (RESOLUTION/SPACE)) - SPACE/2);
+                        i/(NUMVECS_X / SPACE) - SPACE/2,
+                        j/(NUMVECS_Y / SPACE) - SPACE/2);
             cairo_rel_line_to(cr, 
                             randomField[i][j].x/TICKMULT,
                             randomField[i][j].y/TICKMULT);
@@ -178,8 +203,8 @@ int dummy_main(int argc, char* argv[]) {
             
             // draw dots at origins of lines
             cairo_move_to(cr,
-                        i/(WID * (RESOLUTION/SPACE)) - SPACE/2,
-                        j/(HEI * (RESOLUTION/SPACE)) - SPACE/2);
+                        i/(NUMVECS_X / SPACE) - SPACE/2,
+                        j/(NUMVECS_Y / SPACE) - SPACE/2);
             cairo_set_source_rgba(cr, 1, 1, 1, 1); // white
             cairo_rel_line_to(cr, -0.01, -0.01);
             cairo_stroke(cr);
