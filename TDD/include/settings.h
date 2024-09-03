@@ -4,9 +4,14 @@
 
 #define WID 3000 // pixel resolution of output
 #define HEI 3000
+
 #define RESOLUTION .001 // use xx% of image dimension for number of grid squares
 // increase = more vectors (nVectors = wid * resolution)
 // default has been .005; .003 might be cooler and smoother?
+
+// number of vectors used for perlin noise along each axis
+#define NUMVECS_X (WID * RESOLUTION)
+#define NUMVECS_Y (HEI * RESOLUTION)
 
 /** total size of space **/
 #define SPACE       50.0     // width of total transformed space

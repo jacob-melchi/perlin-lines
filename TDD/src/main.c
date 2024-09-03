@@ -225,6 +225,7 @@ int main(int argc, char* argv[]) {
             point = paths[i][n-1]; // start at previous point
             double noise = getPerlin(point, NORM); // get noise
             if(SCALERANGE) noise /= range; // "normalize" noise
+            
             if(noise > maxAng) maxAng = noise; // check values & store max
             if(noise < minAng) minAng = noise;
 

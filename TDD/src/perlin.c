@@ -26,13 +26,13 @@ double getPerlin(vector point, int norm) {
         v3 | v4
     */
     // get an index for the array of randomly-generated vectors
-    int randIdx_x = (int)((point.x + SPACE/2) * (WID * RESOLUTION/SPACE));
-    int randIdx_y = (int)((point.y + SPACE/2) * (HEI * RESOLUTION/SPACE));
+    int randIdx_x = (int)((point.x + SPACE/2) * (NUMVECS_X/SPACE));
+    int randIdx_y = (int)((point.y + SPACE/2) * (NUMVECS_Y/SPACE));
 
     // check against array limits
-    if(randIdx_x > (WID * RESOLUTION) - 1) { randIdx_x = (WID * RESOLUTION) - 1; }
+    if(randIdx_x > NUMVECS_X - 1) { randIdx_x = NUMVECS_X - 1; }
     if(randIdx_x < 0) { randIdx_x = 0; }
-    if(randIdx_y > (HEI * RESOLUTION) - 1) { randIdx_y = (HEI * RESOLUTION) - 1; }
+    if(randIdx_y > NUMVECS_Y - 1) { randIdx_y = NUMVECS_Y - 1; }
     if(randIdx_y < 0) { randIdx_y = 0; }
 
     // retrieve vectors from field
@@ -43,33 +43,33 @@ double getPerlin(vector point, int norm) {
 
     // get COORDINATES of corners in actual space
     vector c1, c2, c3, c4;
-    c1.x = ((randIdx_x      )/((WID * RESOLUTION)/SPACE) - SPACE/2);
-    c1.y = ((randIdx_y + 1.0)/((HEI * RESOLUTION)/SPACE) - SPACE/2);
+    c1.x = ((randIdx_x      )/(NUMVECS_X/SPACE) - SPACE/2);
+    c1.y = ((randIdx_y + 1.0)/(NUMVECS_Y/SPACE) - SPACE/2);
 
-    c2.x = ((randIdx_x + 1.0)/((WID * RESOLUTION)/SPACE) - SPACE/2);
-    c2.y = ((randIdx_y + 1.0)/((HEI * RESOLUTION)/SPACE) - SPACE/2);
+    c2.x = ((randIdx_x + 1.0)/(NUMVECS_X/SPACE) - SPACE/2);
+    c2.y = ((randIdx_y + 1.0)/(NUMVECS_Y/SPACE) - SPACE/2);
 
-    c3.x = ((randIdx_x      )/((WID * RESOLUTION)/SPACE) - SPACE/2);
-    c3.y = ((randIdx_y      )/((HEI * RESOLUTION)/SPACE) - SPACE/2);
+    c3.x = ((randIdx_x      )/(NUMVECS_X/SPACE) - SPACE/2);
+    c3.y = ((randIdx_y      )/(NUMVECS_Y/SPACE) - SPACE/2);
 
-    c4.x = ((randIdx_x + 1.0)/((WID * RESOLUTION)/SPACE) - SPACE/2);
-    c4.y = ((randIdx_y      )/((HEI * RESOLUTION)/SPACE) - SPACE/2);
+    c4.x = ((randIdx_x + 1.0)/(NUMVECS_X/SPACE) - SPACE/2);
+    c4.y = ((randIdx_y      )/(NUMVECS_Y/SPACE) - SPACE/2);
     
     // get offset vectors
     // multiply by scale to get vectors that look like they're from a 1x1 square
     vector u1, u2, u3, u4;
     double dir = -1.0;
-    u1.x = (dir * (point.x - c1.x)) * ((WID * RESOLUTION)/SPACE);
-    u1.y = (dir * (point.y - c1.y)) * ((HEI * RESOLUTION)/SPACE);
+    u1.x = (dir * (point.x - c1.x)) * (NUMVECS_X/SPACE);
+    u1.y = (dir * (point.y - c1.y)) * (NUMVECS_Y/SPACE);
 
-    u2.x = (dir * (point.x - c2.x)) * ((WID * RESOLUTION)/SPACE);
-    u2.y = (dir * (point.y - c2.y)) * ((HEI * RESOLUTION)/SPACE);
+    u2.x = (dir * (point.x - c2.x)) * (NUMVECS_X/SPACE);
+    u2.y = (dir * (point.y - c2.y)) * (NUMVECS_Y/SPACE);
 
-    u3.x = (dir * (point.x - c3.x)) * ((WID * RESOLUTION)/SPACE);
-    u3.y = (dir * (point.y - c3.y)) * ((HEI * RESOLUTION)/SPACE);
+    u3.x = (dir * (point.x - c3.x)) * (NUMVECS_X/SPACE);
+    u3.y = (dir * (point.y - c3.y)) * (NUMVECS_Y/SPACE);
 
-    u4.x = (dir * (point.x - c4.x)) * ((WID * RESOLUTION)/SPACE);
-    u4.y = (dir * (point.y - c4.y)) * ((HEI * RESOLUTION)/SPACE);
+    u4.x = (dir * (point.x - c4.x)) * (NUMVECS_X/SPACE);
+    u4.y = (dir * (point.y - c4.y)) * (NUMVECS_Y/SPACE);
 
     // normalize if argument is true
     if(norm == 1) {
