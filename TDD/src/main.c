@@ -55,8 +55,12 @@ vector choices[8] = {
     (vector){M_SQRT2/2.0, -M_SQRT2/2.0}
 };
 
+#ifndef UNITTEST
+int main(int argc, char* argv[]) {
+#else
+int dummy_main(int argc, char* argv[]) {
+#endif
 
-int manin(int argc, char* argv[]) {
     if(MEMORY > NUMLINES && DOGRAVITY) {
         printf("\n!!!!!!! number of lines to check against greater than number of actual lines. exiting. !!!!!!!\n");
         return 1;
@@ -112,8 +116,6 @@ int manin(int argc, char* argv[]) {
     int bonks = 0; // collision detection counter
 
     // populate 'subtick' array
-    // print perlin field
-    #if DRAWTICKS
     for(int i = 0; i < NUMTICKS; i++) {
         for(int j = 0; j < NUMTICKS; j++) {
                 // increment in defined space for x/y
@@ -141,6 +143,8 @@ int manin(int argc, char* argv[]) {
                 perlinVec.x = cos(ang);
                 perlinVec.y = sin(ang);
                 
+                // print perlin field?
+                #if DRAWTICKS
                 cairo_set_source_rgba(cr, 0, 1, 0, 1);
                 cairo_move_to(cr, point.x, point.y);
                 cairo_rel_line_to(cr, .01, .01);
