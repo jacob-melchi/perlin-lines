@@ -30,8 +30,8 @@ CPPUTEST_WARNINGFLAGS = -Wno-error #-Wall -Werror -Wswitch-default -Wswitch-enum
 CPPUTEST_EXE_FLAGS    += -c
 
 # REMOVE '-static' FROM MAKEFILEWORKER!!
-CPPUTEST_CXXFLAGS += $$(pkg-config --cflags cairo)
-CPPUTEST_CFLAGS   += $$(pkg-config --cflags cairo)
+CPPUTEST_CXXFLAGS += -DUNITTEST $$(pkg-config --cflags cairo)
+CPPUTEST_CFLAGS   += -DUNITTEST $$(pkg-config --cflags cairo)
 CPPUTEST_LDFLAGS  += $$(pkg-config --libs cairo)
 
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk

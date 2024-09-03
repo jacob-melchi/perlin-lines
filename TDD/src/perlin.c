@@ -1,6 +1,7 @@
 #include "perlin.h"
 
-vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
+vector randomField[(int)NUMVECS_X + 1][(int)NUMVECS_Y + 1];
+vector subticks[NUMTICKS][NUMTICKS];
 
 // returns a point between a and b
 // factor w, in [0,1], will determine where the returned point will be
@@ -14,6 +15,12 @@ static double lerp(double a, double b, double w) {
 static double fade(double x) {
     return ((6 * pow(x,5)) - (15 * pow(x,4)) + (10 * pow(x,3)));
 }
+
+static inline bool subtickIndexOOB(int x, int y) {
+    return !((x < NUMTICKS) && (x > 0) &&\
+             (y < NUMTICKS) && (y > 0));
+}
+
 
 // generates the perlin noise vector of a point, given coordinates + other parameters
 // no cairo interfacing in here
@@ -99,4 +106,26 @@ double getPerlin(vector point, int norm) {
     // printf("xWeight1: %f  xWeight12: %f  yWeight: %f\n", xWeight1, xWeight2, yWeight);
 
     return value;
+}
+
+bool setSubtick(int x, int y, vector* input) {
+    if (subtickIndexOOB(x, y)) {
+        return false;
+    }
+
+    subticks[x][y].x = input->x;
+    subticks[x][y].y = input->y;
+
+    return true;
+}
+
+bool getSubtick(int x, int y, vector* output) {
+    if (subtickIndexOOB(x, y)) {
+        return false;
+    }
+    
+    output->x = subticks[x][y].x;
+    output->y = subticks[x][y].y;
+
+    return true;
 }
