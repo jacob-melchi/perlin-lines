@@ -12,6 +12,11 @@
 // //    1. keep a separate field with gravity updated by lines
 // //    2. update/hardcode the original field with the lines' gravity
 
+// TODO: OR,, process in parallel and just assume that a line will only
+// //    ever bounce off of the ones it's 'between' at the beginning?
+// // //    this would only work when starting all particles from the
+// // //    same side, and maybe not always be true but.. worth trying
+
 // not a lot of rightward movement because perlin noise doesn't reach its exremes very often.
 // interpreting these extremes as angles, they would be 0 and 2pi.
 // BOTH of these extreme angles are ones that point right.
@@ -56,20 +61,30 @@ vector choices[8] = {
     (vector){M_SQRT2/2.0, -M_SQRT2/2.0}
 };
 
+static inline int paramValidation(void) {
+    if(MEMORY > NUMLINES && DOGRAVITY) {
+        printf("\n!!!!!!! number of lines to check against greater than number of actual lines. exiting. !!!!!!!\n");
+        return 1;
+    }
+
+    if((DOGRAVITY) && (GRAVRADIUS >= (LINESPACE / (NUMLINES - 1.0)))) {
+        printf("\n!!!!!!! gravity radius larger than gap between starting points. exiting. !!!!!!!\n");
+        return 1;
+    }
+
+    return 0;
+}
+
 #ifndef UNITTEST
 int main(int argc, char* argv[]) {
 #else
 int dummy_main(int argc, char* argv[]) {
 #endif
 
-    if(MEMORY > NUMLINES && DOGRAVITY) {
-        printf("\n!!!!!!! number of lines to check against greater than number of actual lines. exiting. !!!!!!!\n");
+    if (paramValidation()) {
         return 1;
     }
-    if((DOGRAVITY) && (GRAVRADIUS >= (LINESPACE / (NUMLINES - 1.0)))) {
-        printf("\n!!!!!!! gravity radius larger than gap between starting points. exiting. !!!!!!!\n");
-        return 1;
-    }
+    
     srand(time(NULL)); // seed rand()
 
     // range - due to interpolation, noise won't really ever reach [-1, 1].
@@ -231,33 +246,7 @@ int dummy_main(int argc, char* argv[]) {
 
     printf("lines calculated in a total of %.2f seconds.\n", totalTimeUsed);
 
-    // draw!
-    cairo_set_line_width(cr, 0.2);
-    // just setting cairo to dots doesn't play nice with lots of closely-packed points:
-    const double dashes[2] = {0.001, .7}; 
-    cairo_set_dash(cr, dashes, 2, 0.0);
-
-    for(int i = 0; i < NUMLINES; i++) { // for each line...
-        cairo_set_source_rgba(cr, 0.1 + (i * 0.7/NUMLINES), 0.3, 0.4, 1); // get a color gradient
-        cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // go to beginning of path
-
-        for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in current line...
-            #if NOJUMPS
-            // TODO: are we getting NaNs again????
-            if(vector_distance(paths[i][n], paths[i][n-1]) > 5) { // if there's some massive jump...
-                // need to move, otherwise there will still be a weird long-ass line
-                cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
-                continue; // next point
-            }
-            #endif
-
-            cairo_line_to(cr, paths[i][n].x, paths[i][n].y); // get the current segment and draw it
-            cairo_stroke(cr);
-
-            cairo_move_to(cr, paths[i][n].x, paths[i][n].y); // jump to end of segment
-            cairo_set_source_rgba(cr, 0.1 + (i * 0.7/NUMLINES), 0.3, 0.4, 1); // increment gradient
-        }
-    }
+    
 
     if(DOBOUNCES && DRAWBOUNCES) {
         cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1); // set to red
@@ -279,6 +268,7 @@ int dummy_main(int argc, char* argv[]) {
 
     printf("%f %f\n", minAng, maxAng); // min and max angles found with perlin noise?
     
+    draw_plotPaths(cr, paths);
 
     cairo_destroy(cr); // clean up and save
     cairo_surface_write_to_png(surface, "out.png");

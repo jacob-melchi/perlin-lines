@@ -71,6 +71,36 @@ void draw_plotPerlinVectors(cairo_t* cr) {
     
 }
 
+void draw_plotPaths(cairo_t* cr, vector paths[NUMLINES][NUMSTEPS + 1]) {
+    // draw!
+    cairo_set_line_width(cr, 0.2);
+    // just setting cairo to dots doesn't play nice with lots of closely-packed points:
+    const double dashes[2] = {0.001, .7}; 
+    cairo_set_dash(cr, dashes, 2, 0.0);
+
+    for(int i = 0; i < NUMLINES; i++) { // for each line...
+        cairo_set_source_rgba(cr, 0.1 + (i * 0.7/NUMLINES), 0.3, 0.4, 1); // get a color gradient
+        cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // go to beginning of path
+
+        for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in current line...
+            #if NOJUMPS
+            // TODO: are we getting NaNs again????
+            if(vector_distance(paths[i][n], paths[i][n-1]) > 5) { // if there's some massive jump...
+                // need to move, otherwise there will still be a weird long-ass line
+                cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
+                continue; // next point
+            }
+            #endif
+
+            cairo_line_to(cr, paths[i][n].x, paths[i][n].y); // get the current segment and draw it
+            cairo_stroke(cr);
+
+            cairo_move_to(cr, paths[i][n].x, paths[i][n].y); // jump to end of segment
+            cairo_set_source_rgba(cr, 0.1 + (i * 0.7/NUMLINES), 0.3, 0.4, 1); // increment gradient
+        }
+    }
+}
+
 void draw_fillBackground(cairo_t* cr, cairo_surface_t* surface) {
     cairo_translate(cr, WID/2.0, HEI/2.0);
     cairo_scale(cr, WID/SPACE, -HEI/SPACE); // want to translate -1.0 <-> 1.0 to 0 <-> 500
