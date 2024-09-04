@@ -79,15 +79,10 @@ int dummy_main(int argc, char* argv[]) {
 
     cairo_surface_t* surface; // create surface and context
     cairo_t* cr;
-
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WID, HEI); // ARGB32 type (R/G/B + alpha)
     cr = cairo_create(surface);
-    cairo_translate(cr, WID/2.0, HEI/2.0);
-    cairo_scale(cr, WID/SPACE, -HEI/SPACE); // want to translate -1.0 <-> 1.0 to 0 <-> 500
 
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0); // fill background
-    cairo_rectangle(cr, -SPACE/2, -SPACE/2, SPACE, SPACE);
-    cairo_fill(cr);
+    fillBackground(cr, surface);
 
     for(int i = 0; i < WID * RESOLUTION + 1; i++) { // generate random field of vectors given resolution
         for(int j = 0; j < HEI * RESOLUTION + 1; j++) {
@@ -142,34 +137,9 @@ int dummy_main(int argc, char* argv[]) {
 
     if (DRAWTICKS) {
         drawSubTicks(cr);
+        drawPerlinVectors(cr);
     }
-    
 
-
-    // large grid
-    for(int i = 0; i < NUMVECS_X; i++) { // draw random vector field
-        for(int j = 0; j < NUMVECS_Y; j++) {
-            // draw lines
-            cairo_move_to(cr,
-                        i/(NUMVECS_X / SPACE) - SPACE/2,
-                        j/(NUMVECS_Y / SPACE) - SPACE/2);
-            cairo_rel_line_to(cr, 
-                            randomField[i][j].x/TICKMULT,
-                            randomField[i][j].y/TICKMULT);
-            cairo_set_source_rgba(cr, 0, 1, 0, 0.7); // green semitrasnparent
-            cairo_stroke(cr);
-            
-            // draw dots at origins of lines
-            cairo_move_to(cr,
-                        i/(NUMVECS_X / SPACE) - SPACE/2,
-                        j/(NUMVECS_Y / SPACE) - SPACE/2);
-            cairo_set_source_rgba(cr, 1, 1, 1, 1); // white
-            cairo_rel_line_to(cr, -0.01, -0.01);
-            cairo_stroke(cr);
-        }
-    }
-    
-    
     
     vector reflecting[NUMLINES] = {}; // store reflected vector for bouncing
     // want to keep reflecting vector, and shrink/add it to current line as long as this status is active
@@ -235,78 +205,7 @@ int dummy_main(int argc, char* argv[]) {
             paths[i][n].y = point.y + (perlinTest[i].y * stepSize);
 
             #if DOGRAVITY
-            // make lines repel each other. each point on each line emits a "field" that
-            // pushes other lines away (if they get within a certain radius)
-            int candidateTracker = 0;
-            int lookBack = ((i - MEMORY) >= 0) ? (i - MEMORY) : 0;
-
-            for(int otherLine = lookBack; otherLine < i; otherLine++) { // for each previous line
-                candidateTracker = 0; // need to count number of "hits"
-
-                for(int j = 0; j < NUMSTEPS; j++) { // reset list of candidates
-                    gravityCandidates[j] = (vector){SPACE + 10, SPACE + 10}; // outside defined bounds
-                }
-
-                // for some radius around the head of the current line
-                for(int j = 0; j < NUMSTEPS; j++) { // go over entirety of each other line
-                    if(dist(paths[i][n], paths[otherLine][j]) < GRAVRADIUS) { // check if another line is within said radius
-                        // add to some list
-                        gravityCandidates[candidateTracker] = paths[otherLine][j]; // store candidate
-                        candidateTracker++; // increment counter
-                    }
-                }
-                
-                for(int j = 0; j < candidateTracker; j++) { // get closest point
-                    if(j == 0) {
-                        closestPoint = gravityCandidates[j]; // just store first candidate
-                    }
-                    else {
-                        if(dist(gravityCandidates[j], paths[i][n]) < dist(closestPoint, paths[i][n])) {
-                            closestPoint = gravityCandidates[j]; // overwrite, if even closer point, store that
-                        }
-                    }
-                }
-
-                // repel current line radially away from that point
-                if(candidateTracker != 0) { // make sure there's a point in range!
-                    // get vector pointing from line to head
-                    repel = (vector){0, 0}; // zero out repel vector
-
-                    #if GRAVSUM
-                    for(int j = 0; j < candidateTracker; j++) { // sum gravity of ALL points in range
-                        repel.x += (paths[i][n].x - gravityCandidates[j].x);
-                        repel.y += (paths[i][n].y - gravityCandidates[j].y);
-                    }
-
-                    #else
-                    repel.x = paths[i][n].x - closestPoint.x;
-                    repel.y = paths[i][n].y - closestPoint.y;
-                    #endif
-
-                    // 1) normalize
-                    repel = normalize(repel);
-
-                    // 2) apply inverse square (and step size?)
-                    double d = dist(closestPoint, paths[i][n]);
-                    double r = GRAVRADIUS;
-                    double alpha;
-                    if((r - d) <= 0) { alpha = 0; }
-                    else { alpha = (GRAVSTREN * ((r * r) - (2 * r * d) + (d * d))) / (r * r); }
-
-                    #if GRAVSUMSCL
-                    alpha *= candidateTracker; // scale gravity by number of points?
-                    #endif
-
-                    repel.x *= alpha;
-                    repel.y *= alpha;
-
-                    // 3) add to original
-                    // paths[i][n].x += repel.x;
-                    // paths[i][n].y += repel.y;
-                    repelOverTime.x += repel.x;
-                    repelOverTime.y += repel.y;
-                }
-            } // end loop over other lines (for comparison)
+            /* see vecField.c */
             #endif    
 
             // it seems that there needs to be some sort of acceleration/hysteresis on the gravity,
@@ -321,77 +220,7 @@ int dummy_main(int argc, char* argv[]) {
 
 
         #if DOBOUNCES
-        for(int currentLine = 0; currentLine < NUMLINES; currentLine++) {
-            // TODO: lines bounce ~through~ each other sometimes.
-            // // add some sort of check for resultant directions?? something else?
-            // // just compensate for acos in the first place maybe?
-            if(isBouncing[currentLine] > 0) {
-                //printf("bouncing %d\n", isBouncing[currentLine]);
-                bounceTracker[currentLine][n] = 1;
-                isBouncing[currentLine]--;
-
-                float multiplier = (isBouncing[currentLine] / (1.0 * BOUNCETIME)) * stepSize * BOUNCESPEED;
-
-                paths[currentLine][n].x += ((reflecting[currentLine].x) * multiplier);
-                paths[currentLine][n].y += ((reflecting[currentLine].y) * multiplier);
-            }
-            else {
-                for(int otherLine = 0; otherLine < NUMLINES; otherLine++) { // for each previous line
-                    // 2. check if this addition causes any collisions
-                    // if collision will happen:
-                    // // 1. reflect direction of current path
-                    // // 2. keep this reflection, decay it for some time
-                    if(otherLine != currentLine) { // don't check path against itself
-                        if(dist(paths[currentLine][n], paths[otherLine][n]) < KEEPOUT) { // 1. new points in test[]
-                            // 3a. if addition causes two "heads" to collide, bounce them both
-
-                            // if A and B collide, don't want to check AGAIN for B and A colliding
-                            if(isBouncing[currentLine] == 0) {
-                                printf("HIT HEAD %d %d\n", currentLine, otherLine);
-                                isBouncing[currentLine] = BOUNCETIME; // bounce counter
-                                isBouncing[otherLine]   = BOUNCETIME;
-
-                                bounceTracker[currentLine][n] = 1; // bounce tracker for drawing
-                                bounceTracker[otherLine][n]   = 1;
-
-                                reflecting[currentLine] = reflect(perlinTest[currentLine], perlinTest[otherLine]);
-                                reflecting[otherLine]   = reflect(perlinTest[otherLine], perlinTest[currentLine]);
-
-                                paths[currentLine][n].x = point.x + (reflecting[currentLine].x * stepSize);
-                                paths[currentLine][n].y = point.y + (reflecting[currentLine].y * stepSize);
-
-                                paths[otherLine][n].x = point.x + (reflecting[otherLine].x * stepSize);
-                                paths[otherLine][n].y = point.y + (reflecting[otherLine].y * stepSize);
-                            }
-                        }
-                    }
-
-                    for(int prevSteps = 0; prevSteps < n - 1; prevSteps++) { // up to (current step - 1)
-                        if(otherLine != currentLine) { // don't check path against itself
-                            if(dist(paths[currentLine][n], paths[otherLine][prevSteps]) < KEEPOUT) { // 2. all other points
-                                // 3b. if collision is between a point and an old bit of a
-                                //     path, bounce only the incident line
-                                // paths[i][n].x = paths[i][n-1].x; - (perlinTest[i].x * stepSize * 3);
-
-                                printf("HIT PREV %d\n", currentLine);
-                                bounceTracker[currentLine][n] = 1;
-                                
-                                // indicate that line is bouncing
-                                isBouncing[currentLine] = BOUNCETIME;
-
-                                // get reflected version of current line's velocity vector
-                                reflecting[currentLine] = reflect(perlinTest[currentLine], paths[otherLine][prevSteps]);
-
-                                // 4. go back and actually add to each path accordingly
-                                paths[currentLine][n].x = point.x + (reflecting[currentLine].x * stepSize);
-                                paths[currentLine][n].y = point.y + (reflecting[currentLine].y * stepSize);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        /* see vecField.c */
         #endif
 
         end = clock(); // store time in clock cycles
@@ -449,21 +278,7 @@ int dummy_main(int argc, char* argv[]) {
     }
 
     printf("%f %f\n", minAng, maxAng); // min and max angles found with perlin noise?
-
-    /*
-    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-    cairo_set_line_width(cr, .01);
-    const double foo[2] = {0.001, .03};
-    cairo_set_dash(cr, foo, 2, 0.0);
-    cairo_set_source_rgba(cr, 0, 1.0, 0, 1.0);
-    for(int i = 0; i < 9; i++) {
-        for(int j = 0; j < 9; j++) {
-            cairo_set_source_rgba(cr, i/18.0, 1.0, j/18.0, 1.0);
-            drawCurve(cr, 1000, .01, (-0.9 + (i * 0.2)), (-0.9 + (j * 0.2)), 0);
-            drawCurve(cr, 1000, .05, 0, 0, 0);
-        }
-    }
-    */
+    
 
     cairo_destroy(cr); // clean up and save
     cairo_surface_write_to_png(surface, "out.png");

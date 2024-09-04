@@ -44,3 +44,38 @@ void drawSubTicks(cairo_t* cr) {
         }
     }
 }
+
+void drawPerlinVectors(cairo_t* cr) {
+    // large grid
+    for(int i = 0; i < NUMVECS_X; i++) { // draw random vector field
+        for(int j = 0; j < NUMVECS_Y; j++) {
+            // draw lines
+            cairo_move_to(cr,
+                        i/(NUMVECS_X / SPACE) - SPACE/2,
+                        j/(NUMVECS_Y / SPACE) - SPACE/2);
+            cairo_rel_line_to(cr, 
+                            randomField[i][j].x/TICKMULT,
+                            randomField[i][j].y/TICKMULT);
+            cairo_set_source_rgba(cr, 0, 1, 0, 0.7); // green semitrasnparent
+            cairo_stroke(cr);
+            
+            // draw dots at origins of lines
+            cairo_move_to(cr,
+                        i/(NUMVECS_X / SPACE) - SPACE/2,
+                        j/(NUMVECS_Y / SPACE) - SPACE/2);
+            cairo_set_source_rgba(cr, 1, 1, 1, 1); // white
+            cairo_rel_line_to(cr, -0.01, -0.01);
+            cairo_stroke(cr);
+        }
+    }
+    
+}
+
+void fillBackground(cairo_t* cr, cairo_surface_t* surface) {
+    cairo_translate(cr, WID/2.0, HEI/2.0);
+    cairo_scale(cr, WID/SPACE, -HEI/SPACE); // want to translate -1.0 <-> 1.0 to 0 <-> 500
+
+    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0); // fill background
+    cairo_rectangle(cr, -SPACE/2, -SPACE/2, SPACE, SPACE);
+    cairo_fill(cr);
+}

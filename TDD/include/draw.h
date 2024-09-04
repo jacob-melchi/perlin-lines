@@ -7,5 +7,7 @@
 #include "perlin.h"
 
 void drawSubTicks(cairo_t* cr);
+void drawPerlinVectors(cairo_t* cr);
+void fillBackground(cairo_t* cr, cairo_surface_t* surface);
 
 #endif /* DRAW_H */
