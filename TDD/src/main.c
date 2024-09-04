@@ -94,6 +94,7 @@ int dummy_main(int argc, char* argv[]) {
 
     cairo_surface_t* surface; // create surface and context
     cairo_t* cr;
+    
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WID, HEI); // ARGB32 type (R/G/B + alpha)
     cr = cairo_create(surface);
 
@@ -139,14 +140,13 @@ int dummy_main(int argc, char* argv[]) {
                 if(SCALERANGE) noise /= range;
 
                 double ang = ((noise + 1) * M_PI) - (ANGSHIFT);
-                
-                // if(ang > 2 * M_PI) ang = (2 * M_PI) - .01;
-                // if(ang < 0) ang = 0.0;
 
                 perlinVec.x = cos(ang);
                 perlinVec.y = sin(ang);
 
                 perlin_setSubtick(i, j, &perlinVec);
+
+                // TODO: probably faster to draw here...
         }
     }
 
@@ -239,8 +239,10 @@ int dummy_main(int argc, char* argv[]) {
         #endif
 
         end = clock(); // store time in clock cycles
+
         cpuTimeUsed = cpuTimeUsed = ((double) (end - start)) / CLOCKS_PER_SEC; // convert to seconds 
         totalTimeUsed += cpuTimeUsed; // add to total time
+
         printf("%.2f seconds\n", cpuTimeUsed); // print progress
     } // end loop over i lines
 
@@ -251,17 +253,18 @@ int dummy_main(int argc, char* argv[]) {
     if(DOBOUNCES && DRAWBOUNCES) {
         cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1); // set to red
         cairo_set_line_width(cr, 0.08); // set thinner
+
         for(int i = 0; i < NUMLINES; i++) {
             cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // move to head of path
 
             for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in path
                 cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
-                
-                    if(bounceTracker[i][n] == 1) {
-                        //cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1);
-                        cairo_line_to(cr, paths[i][n-1].x, paths[i][n-1].y); // line to
-                        cairo_stroke(cr);
-                    }
+                 
+                if(bounceTracker[i][n] == 1) {
+                    //cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1);
+                    cairo_line_to(cr, paths[i][n-1].x, paths[i][n-1].y); // line to
+                    cairo_stroke(cr);
+                }
             }
         }
     }
@@ -296,5 +299,6 @@ int dummy_main(int argc, char* argv[]) {
 
     cairo_surface_destroy(surface);
     printf("\a"); // make a lil beep
+
     return 0;
 }
