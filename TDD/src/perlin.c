@@ -24,7 +24,7 @@ static inline bool subtickIndexOOB(int x, int y) {
 
 // generates the perlin noise vector of a point, given coordinates + other parameters
 // no cairo interfacing in here
-double getPerlin(vector point, int norm) {
+double perlin_getPerlin(vector point, int norm) {
     // find which grid space point is in
     // add one for other corners
     /*
@@ -80,19 +80,19 @@ double getPerlin(vector point, int norm) {
 
     // normalize if argument is true
     if(norm == 1) {
-        u1 = normalize(u1);
-        u2 = normalize(u2);
-        u3 = normalize(u3);
-        u4 = normalize(u4);
+        u1 = vector_normalize(u1);
+        u2 = vector_normalize(u2);
+        u3 = vector_normalize(u3);
+        u4 = vector_normalize(u4);
     }
 
     // get dot products
     double d1, d2, d3, d4;
     double scl = 1;
-    d1 = dotProduct(u1, v1) * scl;
-    d2 = dotProduct(u2, v2) * scl;
-    d3 = dotProduct(u3, v3) * scl;
-    d4 = dotProduct(u4, v4) * scl;
+    d1 = vector_dotProduct(u1, v1) * scl;
+    d2 = vector_dotProduct(u2, v2) * scl;
+    d3 = vector_dotProduct(u3, v3) * scl;
+    d4 = vector_dotProduct(u4, v4) * scl;
 
     // linear interpolation of dot products
     // double xWeight1 = (c2.x - point.x)/(c2.x - c1.x);
@@ -108,7 +108,7 @@ double getPerlin(vector point, int norm) {
     return value;
 }
 
-bool setSubtick(int x, int y, vector* input) {
+bool perlin_setSubtick(int x, int y, vector* input) {
     if (subtickIndexOOB(x, y)) {
         return false;
     }
@@ -119,7 +119,7 @@ bool setSubtick(int x, int y, vector* input) {
     return true;
 }
 
-bool getSubtick(int x, int y, vector* output) {
+bool perlin_getSubtick(int x, int y, vector* output) {
     if (subtickIndexOOB(x, y)) {
         return false;
     }

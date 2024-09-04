@@ -44,7 +44,7 @@ TEST_GROUP(Subtick) {
 TEST(Subtick, SetSubtick) {
     vector test = {64, 64};
 
-    setSubtick(4, 4, &test);
+    perlin_setSubtick(4, 4, &test);
 
     LONGS_EQUAL(subticks[4][4].x, 64);
     LONGS_EQUAL(subticks[4][4].y, 64);
@@ -53,15 +53,15 @@ TEST(Subtick, SetSubtick) {
 TEST(Subtick, CannotSetSubtickOutOfBounds) {
     vector test = {64, 64};
 
-    setSubtick(NUMTICKS + 1, NUMTICKS + 1, &test);
+    perlin_setSubtick(NUMTICKS + 1, NUMTICKS + 1, &test);
 
-    setSubtick(-1, -1, &test);
+    perlin_setSubtick(-1, -1, &test);
 };
 
 TEST(Subtick, GetSubtick) {
     vector test = {0, 0};
 
-    getSubtick(3, 3, &test);
+    perlin_getSubtick(3, 3, &test);
 
     LONGS_EQUAL(test.x, 3);
     LONGS_EQUAL(test.y, 3);
@@ -70,12 +70,12 @@ TEST(Subtick, GetSubtick) {
 TEST(Subtick, CannotGetOutOfRangeSubtick) {
     vector test = {0, 0};
 
-    getSubtick(NUMTICKS + 1, NUMTICKS + 1, &test);
+    perlin_getSubtick(NUMTICKS + 1, NUMTICKS + 1, &test);
 
     LONGS_EQUAL(test.x, 0);
     LONGS_EQUAL(test.y, 0);
 
-    getSubtick(-1, -1, &test);
+    perlin_getSubtick(-1, -1, &test);
 
     LONGS_EQUAL(test.x, 0);
     LONGS_EQUAL(test.y, 0);

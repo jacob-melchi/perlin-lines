@@ -9,10 +9,10 @@ typedef struct vector {
     double y;
 } vector;
 
-double dotProduct(vector v1, vector v2);
-double magnitude(vector vec);
-vector normalize(vector vec);
-double getAngle(vector v1, vector v2);
-double dist(vector v1, vector v2);
+double vector_dotProduct(vector v1, vector v2);
+double vector_magnitude(vector vec);
+vector vector_normalize(vector vec);
+double vector_getAngle(vector v1, vector v2);
+double vector_distance(vector v1, vector v2);
 
 #endif /* VECTOR_H */

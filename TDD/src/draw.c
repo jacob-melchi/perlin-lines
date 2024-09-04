@@ -1,6 +1,6 @@
 #include "draw.h"
 
-void drawSubTicks(cairo_t* cr) {
+void draw_plotSubTicks(cairo_t* cr) {
     // increment in defined space for x/y
     double tick = SPACE/(1.0 * NUMTICKS);
     vector point;
@@ -19,7 +19,7 @@ void drawSubTicks(cairo_t* cr) {
 
                 #endif
                 
-                getSubtick(i, j, &perlinVec);
+                perlin_getSubtick(i, j, &perlinVec);
 
                 double angle = acos(perlinVec.x);
                 if (perlinVec.y < 0) {
@@ -45,7 +45,7 @@ void drawSubTicks(cairo_t* cr) {
     }
 }
 
-void drawPerlinVectors(cairo_t* cr) {
+void draw_plotPerlinVectors(cairo_t* cr) {
     // large grid
     for(int i = 0; i < NUMVECS_X; i++) { // draw random vector field
         for(int j = 0; j < NUMVECS_Y; j++) {
@@ -71,7 +71,7 @@ void drawPerlinVectors(cairo_t* cr) {
     
 }
 
-void fillBackground(cairo_t* cr, cairo_surface_t* surface) {
+void draw_fillBackground(cairo_t* cr, cairo_surface_t* surface) {
     cairo_translate(cr, WID/2.0, HEI/2.0);
     cairo_scale(cr, WID/SPACE, -HEI/SPACE); // want to translate -1.0 <-> 1.0 to 0 <-> 500
 

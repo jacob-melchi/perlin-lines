@@ -82,7 +82,7 @@ int dummy_main(int argc, char* argv[]) {
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WID, HEI); // ARGB32 type (R/G/B + alpha)
     cr = cairo_create(surface);
 
-    fillBackground(cr, surface);
+    draw_fillBackground(cr, surface);
 
     for(int i = 0; i < WID * RESOLUTION + 1; i++) { // generate random field of vectors given resolution
         for(int j = 0; j < HEI * RESOLUTION + 1; j++) {
@@ -95,7 +95,7 @@ int dummy_main(int argc, char* argv[]) {
             #else
             randomField[i][j].x = (double)(rand()/(RAND_MAX/2.0) - 1.0); 
             randomField[i][j].y = (double)(rand()/(RAND_MAX/2.0) - 1.0);
-            randomField[i][j] = normalize(randomField[i][j]); // want unit vectors
+            randomField[i][j] = vector_normalize(randomField[i][j]); // want unit vectors
             #endif
             // *!* TODO: *!* maybe randomize the magnitudes a little bit? add noise?
         }
@@ -120,7 +120,7 @@ int dummy_main(int argc, char* argv[]) {
                 point.x = i/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0; // get even-spaced x and y coordinates
                 point.y = j/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0;
                 
-                double noise = getPerlin(point, NORM);
+                double noise = perlin_getPerlin(point, NORM);
                 if(SCALERANGE) noise /= range;
 
                 double ang = ((noise + 1) * M_PI) - (ANGSHIFT);
@@ -131,13 +131,13 @@ int dummy_main(int argc, char* argv[]) {
                 perlinVec.x = cos(ang);
                 perlinVec.y = sin(ang);
 
-                setSubtick(i, j, &perlinVec);
+                perlin_setSubtick(i, j, &perlinVec);
         }
     }
 
     if (DRAWTICKS) {
-        drawSubTicks(cr);
-        drawPerlinVectors(cr);
+        draw_plotSubTicks(cr);
+        draw_plotPerlinVectors(cr);
     }
 
     
@@ -178,7 +178,7 @@ int dummy_main(int argc, char* argv[]) {
     #endif
             // 1. TENTATIVELY add noise to all paths
             point = paths[i][n-1]; // start at previous point
-            double noise = getPerlin(point, NORM); // get noise
+            double noise = perlin_getPerlin(point, NORM); // get noise
             if(SCALERANGE) noise /= range; // "normalize" noise
             
             if(noise > maxAng) maxAng = noise; // check values & store max
@@ -244,7 +244,7 @@ int dummy_main(int argc, char* argv[]) {
         for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in current line...
             #if NOJUMPS
             // TODO: are we getting NaNs again????
-            if(dist(paths[i][n], paths[i][n-1]) > 5) { // if there's some massive jump...
+            if(vector_distance(paths[i][n], paths[i][n-1]) > 5) { // if there's some massive jump...
                 // need to move, otherwise there will still be a weird long-ass line
                 cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
                 continue; // next point
