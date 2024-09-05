@@ -538,7 +538,6 @@ int main(int argc, char* argv[]) {
                     repelOverTime.y += repel.y;
                 }
             } // end loop over other lines (for comparison)
-            #endif    
 
             // it seems that there needs to be some sort of acceleration/hysteresis on the gravity,
             // otherwise a line will go immediately back to the one it just fled from, and jagged edges appear.
@@ -548,6 +547,7 @@ int main(int argc, char* argv[]) {
 
             repelOverTime.x *= GRAVDECAY; // decay field strength over time
             repelOverTime.y *= GRAVDECAY;
+            #endif
         } // end loop over n steps
 
 

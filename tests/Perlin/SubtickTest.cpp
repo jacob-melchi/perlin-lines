@@ -58,7 +58,7 @@ TEST(Subtick, CannotSetSubtickOutOfBounds) {
     perlin_setSubtick(-1, -1, &test);
 };
 
-TEST(Subtick, GetSubtick) {
+TEST(Subtick, GetSubtickFromIndices) {
     vector test = {0, 0};
 
     perlin_getSubtick(3, 3, &test);
@@ -80,3 +80,7 @@ TEST(Subtick, CannotGetOutOfRangeSubtick) {
     LONGS_EQUAL(test.x, 0);
     LONGS_EQUAL(test.y, 0);
 };
+
+TEST(Subtick, GetSubtickFromCoordinates) {
+    
+}

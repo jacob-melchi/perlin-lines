@@ -44,7 +44,6 @@ const double stepSize = .01; // size of step for drawing
 vector gravityCandidates[NUMSTEPS];
 vector closestPoint;
 vector repel = (vector){0, 0};
-vector repelOverTime;
 
 // timekeeping
 clock_t start, end;
@@ -219,16 +218,7 @@ int dummy_main(int argc, char* argv[]) {
 
             #if DOGRAVITY
             /* see vecField.c */
-            #endif    
-
-            // it seems that there needs to be some sort of acceleration/hysteresis on the gravity,
-            // otherwise a line will go immediately back to the one it just fled from, and jagged edges appear.
-            // so -- always do this:
-            paths[i][n].x += repelOverTime.x;
-            paths[i][n].y += repelOverTime.y;
-
-            repelOverTime.x *= GRAVDECAY; // decay field strength over time
-            repelOverTime.y *= GRAVDECAY;
+            #endif
         } // end loop over n steps
 
 
