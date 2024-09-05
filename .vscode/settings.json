@@ -16,7 +16,8 @@
         "string_view": "c",
         "__locale": "c",
         "__string": "c",
-        "perlin.h": "c"
+        "perlin.h": "c",
+        "string.h": "c"
     },
     "runOnSave.statusMessageTimeout": 3000,
     "runOnSave.commands": [

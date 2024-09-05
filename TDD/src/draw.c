@@ -1,14 +1,8 @@
 #include "draw.h"
 
-static const double perlin_vector_x_increment = (SPACE / NUMVECS_X);
-static const double perlin_vector_y_increment = (SPACE / NUMVECS_Y);
-static const double subtick_increment         = (SPACE / NUMTICKS);
-
 void draw_plotSubTicks(cairo_t* cr) {
-    // increment in defined space for x/y
-    double tick = SPACE/(1.0 * NUMTICKS);
     vector point;
-    vector perlinVec; 
+    vector perlinVec;
 
     for(int i = 0; i < NUMTICKS; i++) {
         for(int j = 0; j < NUMTICKS; j++) {
@@ -18,9 +12,8 @@ void draw_plotSubTicks(cairo_t* cr) {
                 #if GREYSCALE
                 cairo_set_source_rgba(cr, noise, noise, noise, 1);
                 cairo_move_to(cr, point.x, point.y);
-                cairo_rectangle(cr, point.x, point.y, tick, tick);
+                cairo_rectangle(cr, point.x, point.y, subtick_increment, subtick_increment);
                 cairo_fill(cr);
-
                 #endif
                 
                 perlin_getSubtick(i, j, &perlinVec);
@@ -115,4 +108,26 @@ void draw_fillBackground(cairo_t* cr, cairo_surface_t* surface) {
     cairo_set_source_rgb(cr, 0.0, 0.0, 0.0); // fill background
     cairo_rectangle(cr, -SPACE/2, -SPACE/2, SPACE, SPACE);
     cairo_fill(cr);
+}
+
+void draw_indicateBounces(cairo_t* cr,
+                          vector paths[NUMLINES][NUMSTEPS + 1],
+                          int bounceTracker[NUMLINES][NUMSTEPS + 1]) {
+    
+    cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1); // set to red
+    cairo_set_line_width(cr, 0.08); // set thinner
+
+    for(int i = 0; i < NUMLINES; i++) {
+        cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // move to head of path
+
+        for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in path
+            cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
+                
+            if(bounceTracker[i][n] == 1) {
+                //cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1);
+                cairo_line_to(cr, paths[i][n-1].x, paths[i][n-1].y); // line to
+                cairo_stroke(cr);
+            }
+        }
+    }
 }

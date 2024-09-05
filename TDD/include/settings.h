@@ -15,7 +15,7 @@
 
 /** total size of space **/
 #define SPACE       50.0          // width of total transformed space
-#define HALFSPACE   (SPACE / 2.0) // half-width of space
+#define HALFSPACE   (SPACE / 2.0) // half-width of space (for translating)
 
 /** noise generation **/
 #define NORM        0        // normalize offset vectors?
@@ -32,7 +32,7 @@
 /** line definitions **/
 #define NUMSTEPS    10000    // number of steps to take per line
 #define NUMLINES    2        // number of lines to draw
-#define LINESPACE   48       // range (units) along which to spread lines
+#define LINESPACE   24       // range (units) along which to spread lines
 #define PARALLEL    0        // step-by-step? (otherwise, line-by-line)
 #define DIRECTIONS  0        // draw from both directions?
 

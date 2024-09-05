@@ -11,6 +11,9 @@ extern vector randomField[(int)(WID*RESOLUTION) + 1][(int)(HEI*RESOLUTION) + 1];
 extern vector subticks[NUMTICKS][NUMTICKS];
 #endif
 
+extern const double perlin_vector_x_increment;
+extern const double perlin_vector_y_increment;
+extern const double subtick_increment;
 
 double perlin_getPerlin(vector point, int norm);
 bool   perlin_setSubtick(int x, int y, vector* input);

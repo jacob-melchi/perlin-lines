@@ -7,6 +7,7 @@
 #include "perlin.h"
 #include "settings.h"
 #include "draw.h"
+#include "util.h"
 
 // TODO: want to either:
 // //    1. keep a separate field with gravity updated by lines
@@ -130,11 +131,8 @@ int dummy_main(int argc, char* argv[]) {
     // populate 'subtick' array
     for(int i = 0; i < NUMTICKS; i++) {
         for(int j = 0; j < NUMTICKS; j++) {
-                // increment in defined space for x/y
-                double tick = SPACE/(1.0 * NUMTICKS);
-
-                point.x = i/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0; // get even-spaced x and y coordinates
-                point.y = j/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0;
+                point.x = (i * subtick_increment) - HALFSPACE; // get even-spaced x and y coordinates
+                point.y = (j * subtick_increment) - HALFSPACE;
                 
                 double noise = perlin_getPerlin(point, NORM);
                 if(SCALERANGE) noise /= range;
@@ -248,25 +246,8 @@ int dummy_main(int argc, char* argv[]) {
 
     printf("lines calculated in a total of %.2f seconds.\n", totalTimeUsed);
 
-    
-
     if(DOBOUNCES && DRAWBOUNCES) {
-        cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1); // set to red
-        cairo_set_line_width(cr, 0.08); // set thinner
-
-        for(int i = 0; i < NUMLINES; i++) {
-            cairo_move_to(cr, paths[i][0].x, paths[i][0].y); // move to head of path
-
-            for(int n = 1; n < NUMSTEPS + 1; n++) { // for each step in path
-                cairo_move_to(cr, paths[i][n].x, paths[i][n].y);
-                 
-                if(bounceTracker[i][n] == 1) {
-                    //cairo_set_source_rgba(cr, 1, 0.3, 0.4, 1);
-                    cairo_line_to(cr, paths[i][n-1].x, paths[i][n-1].y); // line to
-                    cairo_stroke(cr);
-                }
-            }
-        }
+        draw_indicateBounces(cr, paths, bounceTracker);
     }
 
     printf("%f %f\n", minAng, maxAng); // min and max angles found with perlin noise?
@@ -277,25 +258,9 @@ int dummy_main(int argc, char* argv[]) {
     cairo_surface_write_to_png(surface, "out.png");
 
     #if FILENAME
-    // resolution, directions, grav radius,
-    char[30] resString, dirString, radString numString;
-
-    sprintf(resString, "res %0.4f ", RESOLUTION);
-    sprintf(numString, "%d lines",    NUMLINES);
-
-    if(DOGRAVITY)  { sprintf(radString, "radius %0.2f ", GRAVRADIUS); }
-    else           { sprintf(radString, " "); }
-
-    if(DIRECTIONS) { dirString = "LR "; }
-    else           { dirString = "";    }
-
-    const char[] A = strcat(dirString, numString);
-    const char[] B = strcat(A, resString);
-    const char[] C = strcat(B, radString);
-    
-    cairo_surface_write_to_png(surface, C);
+    cairo_surface_write_to_png(surface, util_generateFileName());
     #endif
-     
+    
 
     cairo_surface_destroy(surface);
     printf("\a"); // make a lil beep

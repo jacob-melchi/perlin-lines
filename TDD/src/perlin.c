@@ -3,6 +3,10 @@
 vector randomField[(int)NUMVECS_X + 1][(int)NUMVECS_Y + 1];
 vector subticks[NUMTICKS][NUMTICKS];
 
+const double perlin_vector_x_increment = (SPACE / NUMVECS_X);
+const double perlin_vector_y_increment = (SPACE / NUMVECS_Y);
+const double subtick_increment         = (SPACE / NUMTICKS);
+
 // returns a point between a and b
 // factor w, in [0,1], will determine where the returned point will be
 // on a straight line between a and b. w == 1 just returns a, w == 0 returns b.
