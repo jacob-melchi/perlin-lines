@@ -1,5 +1,9 @@
 #include "draw.h"
 
+static const double perlin_vector_x_increment = (SPACE / NUMVECS_X);
+static const double perlin_vector_y_increment = (SPACE / NUMVECS_Y);
+static const double subtick_increment         = (SPACE / NUMTICKS);
+
 void draw_plotSubTicks(cairo_t* cr) {
     // increment in defined space for x/y
     double tick = SPACE/(1.0 * NUMTICKS);
@@ -8,8 +12,8 @@ void draw_plotSubTicks(cairo_t* cr) {
 
     for(int i = 0; i < NUMTICKS; i++) {
         for(int j = 0; j < NUMTICKS; j++) {
-                point.x = i/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0; // get even-spaced x and y coordinates
-                point.y = j/((1.0 * NUMTICKS)/SPACE) - SPACE/2.0;
+                point.x = (i * subtick_increment) - HALFSPACE; // get even-spaced x and y coordinates
+                point.y = (j * subtick_increment) - HALFSPACE;
 
                 #if GREYSCALE
                 cairo_set_source_rgba(cr, noise, noise, noise, 1);
@@ -51,24 +55,27 @@ void draw_plotPerlinVectors(cairo_t* cr) {
         for(int j = 0; j < NUMVECS_Y; j++) {
             // draw lines
             cairo_move_to(cr,
-                        i/(NUMVECS_X / SPACE) - SPACE/2,
-                        j/(NUMVECS_Y / SPACE) - SPACE/2);
+                          (i * perlin_vector_x_increment) - HALFSPACE,
+                          (j * perlin_vector_y_increment) - HALFSPACE);
+
             cairo_rel_line_to(cr, 
-                            randomField[i][j].x/TICKMULT,
-                            randomField[i][j].y/TICKMULT);
+                              randomField[i][j].x / TICKMULT,
+                              randomField[i][j].y / TICKMULT);
+
             cairo_set_source_rgba(cr, 0, 1, 0, 0.7); // green semitrasnparent
             cairo_stroke(cr);
             
             // draw dots at origins of lines
             cairo_move_to(cr,
-                        i/(NUMVECS_X / SPACE) - SPACE/2,
-                        j/(NUMVECS_Y / SPACE) - SPACE/2);
+                          (i * perlin_vector_x_increment) - HALFSPACE,
+                          (j * perlin_vector_y_increment) - HALFSPACE);
+
             cairo_set_source_rgba(cr, 1, 1, 1, 1); // white
             cairo_rel_line_to(cr, -0.01, -0.01);
+
             cairo_stroke(cr);
         }
     }
-    
 }
 
 void draw_plotPaths(cairo_t* cr, vector paths[NUMLINES][NUMSTEPS + 1]) {

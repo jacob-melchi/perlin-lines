@@ -14,7 +14,8 @@
 #define NUMVECS_Y (HEI * RESOLUTION)
 
 /** total size of space **/
-#define SPACE       50.0     // width of total transformed space
+#define SPACE       50.0          // width of total transformed space
+#define HALFSPACE   (SPACE / 2.0) // half-width of space
 
 /** noise generation **/
 #define NORM        0        // normalize offset vectors?
