@@ -112,6 +112,7 @@ double perlin_getPerlin(vector point, int norm) {
     return value;
 }
 
+
 bool perlin_setSubtick(int x, int y, vector* input) {
     if (subtickIndexOOB(x, y)) {
         return false;
@@ -132,4 +133,48 @@ bool perlin_getSubtick(int x, int y, vector* output) {
     output->y = subticks[x][y].y;
 
     return true;
+}
+
+vector perlin_interpSubticks(vector input) {
+    vector output = {0, 0};
+    double out_x  = 0;
+    double out_y  = 0;
+    int    x_idx  = -1;
+    int    y_idx  = -1;
+
+    // convert coordinate to index
+    x_idx = (int)((input.x + (SPACE/2)) * (NUMTICKS/SPACE));
+    y_idx = (int)((input.y + (SPACE/2)) * (NUMTICKS/SPACE));
+
+    if (x_idx >= NUMTICKS) {
+        x_idx = (NUMTICKS - 1);
+    }
+
+    if (x_idx < 0) {
+        x_idx = 0;
+    }
+
+    if (y_idx >= NUMTICKS) {
+        y_idx = (NUMTICKS - 1);
+    }
+
+    if (y_idx < 0) {
+        y_idx = 0;
+    }
+
+    // THEN get sum/avg
+    out_x = subticks[x_idx    ][y_idx    ].x +\
+            subticks[x_idx + 1][y_idx    ].x +\
+            subticks[x_idx    ][y_idx + 1].x +\
+            subticks[x_idx + 1][y_idx + 1].x;
+
+    out_y = subticks[x_idx    ][y_idx    ].y +\
+            subticks[x_idx + 1][y_idx    ].y +\
+            subticks[x_idx    ][y_idx + 1].y +\
+            subticks[x_idx + 1][y_idx + 1].y;
+    
+    output.x = out_x / 4.0;
+    output.y = out_y / 4.0;
+
+    return output;
 }

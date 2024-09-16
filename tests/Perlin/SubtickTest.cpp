@@ -32,11 +32,27 @@ TEST_GROUP(Subtick) {
 
     void setup() {
         for (int i = 0; i < NUMTICKS; i++) {
-            subticks[i][i] = (vector){i, i};
+            for (int j = 0; j < NUMTICKS; j++) {
+                subticks[i][j] = (vector){i, j};
+            }
         }
     }
 
     void teardown() {
+    }
+
+    double sum_x_components(int index) {
+        return subticks[index  ][index  ].x +\
+               subticks[index+1][index  ].x +\
+               subticks[index  ][index+1].x +\
+               subticks[index+1][index+1].x;
+    }
+
+    double sum_y_components(int index) {
+        return subticks[index  ][index  ].y +\
+               subticks[index+1][index  ].y +\
+               subticks[index  ][index+1].y +\
+               subticks[index+1][index+1].y;
     }
 
 };
@@ -81,6 +97,38 @@ TEST(Subtick, CannotGetOutOfRangeSubtick) {
     LONGS_EQUAL(test.y, 0);
 };
 
-TEST(Subtick, GetSubtickFromCoordinates) {
+TEST(Subtick, InterpolateSubticks) {
+    // pass point, get ... ?
+    vector test   = {0, 0};            // origin
+    vector output = {0, 0};
+    int    index  = (int)(NUMTICKS/2.0); // index at the origin(?)
+
+    output = perlin_interpSubticks(test);
+
+    DOUBLES_EQUAL(sum_x_components(index)/4.0, output.x, DOUBLE_TOLERANCE);
+    DOUBLES_EQUAL(sum_y_components(index)/4.0, output.y, DOUBLE_TOLERANCE);
+};
+
+TEST(Subtick, PointsAlongBoundaryGetValidCoordinates) {
+    vector test   = {-(SPACE/2), -(SPACE/2)}; // top left corner
+    vector output = {0, 0};
+    int index;
+
+    index = 0;
+    output = perlin_interpSubticks(test);
+
+    DOUBLES_EQUAL(sum_x_components(index)/4.0, output.x, DOUBLE_TOLERANCE);
+    DOUBLES_EQUAL(sum_y_components(index)/4.0, output.y, DOUBLE_TOLERANCE);
+
+
+    index = 749;
+    test = {(SPACE/2), (SPACE/2)};
+    output = perlin_interpSubticks(test);
+
+    DOUBLES_EQUAL(sum_x_components(index)/4.0, output.x, DOUBLE_TOLERANCE);
+    DOUBLES_EQUAL(sum_y_components(index)/4.0, output.y, DOUBLE_TOLERANCE);
+};
+
+TEST(Subtick, NothingReturnedIfInputOOB) {
     
-}
+};

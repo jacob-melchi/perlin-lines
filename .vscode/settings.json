@@ -17,7 +17,8 @@
         "__locale": "c",
         "__string": "c",
         "perlin.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "chrono": "cpp"
     },
     "runOnSave.statusMessageTimeout": 3000,
     "runOnSave.commands": [

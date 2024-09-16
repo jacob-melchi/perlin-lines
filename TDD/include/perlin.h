@@ -18,5 +18,6 @@ extern const double subtick_increment;
 double perlin_getPerlin(vector point, int norm);
 bool   perlin_setSubtick(int x, int y, vector* input);
 bool   perlin_getSubtick(int x, int y, vector* output);
+vector perlin_interpSubticks(vector input);
 
 #endif /* PERLIN_H */

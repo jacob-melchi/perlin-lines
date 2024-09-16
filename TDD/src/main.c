@@ -202,8 +202,14 @@ int dummy_main(int argc, char* argv[]) {
             // if(ang < 0) ang = 0.0;
 
             // turn angle into unit vector (sin^2 + cos^2 = 1)
-            perlinTest[i].x = cos(ang);
-            perlinTest[i].y = sin(ang);
+            // TODO: no longer going to do this w/ the subticks invovled.
+            // //    these values have already been calculated. just take
+            // //    an average of the four...
+            // perlinTest[i].x = cos(ang);
+            // perlinTest[i].y = sin(ang);
+            vector tmp = perlin_interpSubticks(point);
+            perlinTest[i].x = tmp.x;
+            perlinTest[i].y = tmp.y;
 
             // store new paths in temp array (is this necessary?)
             #if DIRECTIONS
